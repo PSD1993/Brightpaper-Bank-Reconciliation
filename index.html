@@ -635,7 +635,7 @@ const S={bank:null,erp:null,result:null,view:'matched',sideDr:true,sideCr:false}
 (function(){try{var x=JSON.parse(localStorage.getItem('br_side')||'null');if(x&&(x.dr||x.cr)){S.sideDr=!!x.dr;S.sideCr=!!x.cr;}}catch(e){}})();
 function saveSide(){try{localStorage.setItem('br_side',JSON.stringify({dr:S.sideDr,cr:S.sideCr}));}catch(e){}}
 const G={ // header-name guesses
-  ref:['utr','rrn','ref','reference','chq','cheque','cheque no','chequeno','instrument','txn id','transaction id','tran id','vch no','vch no.','voucher no'],
+  ref:['utr','rrn','ref','reference','chq','cheque','cheque no','chequeno','instrument','txn id','transaction id','tran id','vch no','vch no.','voucher no','doc.no.','doc.no','doc no','doc. no.','document no'],
   amt:['amount','amt','txn amount','transaction amount','value'],
   dr:['debit','withdrawal','dr','paid out','payment'],
   cr:['credit','deposit','cr','paid in','receipt'],
@@ -680,58 +680,141 @@ function resetDrop(which){
     `Click or drop the ${which} file here<br><span style="font-size:11.5px">PDF · Excel · CSV</span>`;
 }
 
-/* ---------- PDF table extraction (layout based) ---------- */
+/* ---------- PDF table extraction (layout based) ----------
+   v2: date-anchored rows (wrapped narration + vertically-centred amounts sahi aate hain),
+   header-overlap column assignment (left-aligned text / right-aligned numbers),
+   page header/footer, "Opening/Brought forward", "Total" jaisi junk lines skip. */
 const PDF_HDR_KW=['date','narration','particulars','description','remark','remarks',
   'details','desc','withdrawal','deposit','debit','credit','balance','chq','cheque',
-  'ref','reference','utr','value date','tran','amount','instrument','type','dr','cr'];
+  'ref','reference','utr','value date','tran','amount','instrument','type','dr','cr','doc'];
+const PDF_JUNK=/brought forward|carried forward|opening balance|closing balance|^total\b|^balance\s*:|end of report|page \d+ of \d+|^pages?\s*:|^user\s*:|regd\.? office|^cin\s*:|telephone no|website\s*:|statement dt|^account no|^customer no|^generated on|^printed on/i;
+const PDF_JUNK_DATED=/opening balance|closing balance|brought forward|carried forward/i;
 async function extractPdfRows(file){
   const buf=await file.arrayBuffer();
   const pdf=await pdfjsLib.getDocument({data:buf}).promise;
-  let visualRows=[];
+  const pages=[];
   for(let p=1;p<=pdf.numPages;p++){
     const page=await pdf.getPage(p);
     const tc=await page.getTextContent();
     const items=tc.items.filter(it=>it.str.trim()!=='').map(it=>({
-      x:it.transform[4], y:it.transform[5], w:it.width||0, str:it.str.trim()
+      x:it.transform[4], y:it.transform[5], w:it.width||0, h:it.height||0, str:it.str.trim(), page:p
     }));
-    if(items.length)visualRows=visualRows.concat(clusterRows(items));
+    if(items.length)pages.push(clusterRows(items));
   }
-  if(!visualRows.length)return[];
-  // find header row (max keyword hits)
-  let hi=-1,hScore=1;
-  visualRows.forEach((r,i)=>{
-    const txt=r.items.map(t=>t.str.toLowerCase()).join(' ');
-    let s=0;PDF_HDR_KW.forEach(k=>{if(txt.includes(k))s++;});
-    if(s>hScore){hScore=s;hi=i;}
-  });
-  if(hi<0)hi=visualRows.reduce((b,r,i,a)=>r.items.length>a[b].items.length?i:b,0);
-  const anchors=mergeHeaderCells(visualRows[hi].items); // [{cx,text}]
-  anchors.sort((a,b)=>a.cx-b.cx);
-  const bounds=[];for(let i=0;i<anchors.length-1;i++)bounds.push((anchors[i].cx+anchors[i+1].cx)/2);
-  const colOf=cx=>{let i=0;while(i<bounds.length&&cx>bounds[i])i++;return i;};
-  const headerCells=anchors.map(a=>a.text);
-  const narrIdx=headerCells.findIndex(h=>/narrat|particular|descrip|remark|detail|desc/i.test(h));
-  const dateIdx=headerCells.findIndex(h=>/date/i.test(h));
-  const headerSig=headerCells.join('|').toLowerCase();
+  if(!pages.length)return[];
+  // 1) header row = visual row with most header keywords (whole document)
+  let best=null,bestScore=1;
+  pages.forEach((rows,pi)=>rows.forEach((r,ri)=>{const s=hdrScore(r);if(s>bestScore){bestScore=s;best={pi,ri};}}));
+  if(!best){const pi=0,rows=pages[0];const ri=rows.reduce((b,r,i,a)=>r.items.length>a[b].items.length?i:b,0);best={pi,ri};}
+  const hdrRows=pages[best.pi],hdrRow=hdrRows[best.ri];
+  const hdrSig=sigOf(hdrRow.items);
+  const cells=buildHeaderCells(hdrRows,best.ri);            // [{x0,x1,text}]
+  const headerCells=cells.map(c=>c.text);
+  const dateCol=cells.findIndex(c=>/date/i.test(c.text));
 
+  // 2) collect data items page by page: drop page header (above table header), header rows, junk lines
+  let all=[];
+  pages.forEach((rows,pi)=>{
+    let hi=-1;
+    rows.forEach((r,i)=>{if(hi<0&&(sigOf(r.items)===hdrSig||(hdrScore(r)>=3&&hdrScore(r)>=bestScore-1)))hi=i;});
+    rows.forEach((r,i)=>{
+      if(hi>=0&&i<=hi)return;                                  // page-top info + header itself
+      const txt=r.items.map(t=>t.str).join(' ').trim();
+      const dated=r.items.some(t=>{const d=parseDate(t.str);return d&&!isNaN(d);});
+      if(PDF_JUNK_DATED.test(txt))return;                      // "OPENING BALANCE" row even if it carries a date
+      if(!dated&&PDF_JUNK.test(txt))return;                    // totals, footers, brought-forward lines
+      r.items.forEach(t=>{t.pi=pi;all.push(t);});
+    });
+  });
+  if(!all.length)return[headerCells];
+
+  // 3) column assignment: header-overlap, then expand spans with assigned items, nearest as last resort
+  assignColumns(all,cells);
+
+  // 4) rows: anchor on the Date column (one date per transaction); every other item joins its nearest date (same page)
+  const anchors=dateCol>=0?all.filter(t=>t.col===dateCol&&(()=>{const d=parseDate(t.str);return d&&!isNaN(d);})()):[];
+  if(!anchors.length)return fallbackRows(all,cells,headerCells);
+  const gaps=[];pages.forEach((_,pi)=>{const a=anchors.filter(t=>t.pi===pi).sort((p,q)=>q.y-p.y);for(let i=1;i<a.length;i++)gaps.push(a[i-1].y-a[i].y);});
+  gaps.sort((p,q)=>p-q);
+  const pitch=gaps.length?gaps[Math.floor(gaps.length/2)]:(anchors[0].h||10)*2.5;
+  const edgeTol=0.55*pitch;
+  const kept=[],rowsOut=[];
+  pages.forEach((_,pi)=>{
+    const A=anchors.filter(t=>t.pi===pi).sort((p,q)=>q.y-p.y);
+    if(!A.length)return;
+    const R=A.map(a=>({a,items:[a]}));
+    all.filter(t=>t.pi===pi&&!A.includes(t)).forEach(t=>{
+      let bi=-1,bd=1e9;A.forEach((a,i)=>{const d=Math.abs(a.y-t.y);if(d<bd){bd=d;bi=i;}});
+      if(bi<0)return;
+      // Voronoi between neighbouring anchors; outside the first/last anchor only a little slack
+      const above=bi>0?(A[bi-1].y-A[bi].y)/2:edgeTol, below=bi<A.length-1?(A[bi].y-A[bi+1].y)/2:edgeTol;
+      const dy=t.y-A[bi].y;
+      if((dy>0&&dy<=above+0.5)||(dy<=0&&-dy<=below+0.5))R[bi].items.push(t);
+    });
+    R.forEach(r=>{rowsOut.push(r);r.items.forEach(t=>kept.push(t));});
+  });
+  assignColumns(kept,cells);                                   // final pass: only real transaction text decides column widths
   const out=[headerCells];
-  for(let i=0;i<visualRows.length;i++){
-    if(i===hi)continue;
-    const cells=new Array(anchors.length).fill('');
-    visualRows[i].items.forEach(t=>{const c=colOf(t.x+t.w/2);cells[c]=(cells[c]?cells[c]+' ':'')+t.str;});
-    if(cells.join('|').toLowerCase()===headerSig)continue; // repeated header on later pages
-    // continuation line (wrapped narration): no valid date anywhere → merge into prev
-    const hasDate=cells.some(c=>{const d=parseDate(c);return d&&!isNaN(d);});
-    const isCont=!hasDate && (dateIdx<0||!cells[dateIdx]) && out.length>1;
-    if(isCont){
-      const prev=out[out.length-1];
-      const tgt=narrIdx>=0?narrIdx:prev.reduce((b,c,j,a)=>String(c).length>String(a[b]).length?j:b,0);
-      const add=cells.filter(c=>c).join(' ');
-      if(add)prev[tgt]=(prev[tgt]?prev[tgt]+' ':'')+add;
-      continue;
+  rowsOut.forEach(r=>{
+    const c=new Array(cells.length).fill('');
+    r.items.sort((p,q)=>q.y-p.y||p.x-q.x).forEach(t=>{c[t.col]=(c[t.col]?c[t.col]+' ':'')+t.str;});
+    if(c.some(x=>x!==''))out.push(c);
+  });
+  return out;
+}
+function sigOf(items){return mergeHeaderCells(items).map(c=>c.text.toLowerCase()).join('|');}
+function hdrScore(r){const txt=r.items.map(t=>t.str.toLowerCase()).join(' ');let s=0;PDF_HDR_KW.forEach(k=>{if(txt.includes(k))s++;});return s;}
+function buildHeaderCells(rows,hi){
+  const hdr=rows[hi];
+  const cells=mergeHeaderCells(hdr.items),base=cells.slice();
+  const hh=Math.max(8,...hdr.items.map(t=>t.h||10));
+  // wrapped header fragments on the adjacent line (e.g. "DRC" / "R" for a DRCR column) → extra header cells
+  [hi-1,hi+1,hi-2,hi+2].forEach(j=>{
+    const r=rows[j];if(!r||Math.abs(r.y-hdr.y)>1.6*hh)return;
+    const frag=t=>{const x0=t.x,x1=t.x+t.w;return t.str.length<=14&&!/\d{3,}/.test(t.str)&&!base.some(c=>x0<c.x1&&x1>c.x0);};
+    if(!r.items.every(frag))return;
+    r.items.forEach(t=>{const x0=t.x,x1=t.x+t.w;
+      const near=cells.find(c=>x0<c.x1+14&&x1>c.x0-14);
+      if(near){near.x0=Math.min(near.x0,x0);near.x1=Math.max(near.x1,x1);near.text=(near.text+' '+t.str).trim();}
+      else cells.push({x0,x1,cx:(x0+x1)/2,text:t.str});
+    });
+  });
+  cells.sort((a,b)=>a.x0-b.x0);
+  return cells;
+}
+function assignColumns(items,cells){
+  const ov=(x0,x1,s)=>Math.max(0,Math.min(x1,s.x1)-Math.max(x0,s.x0));
+  const pick=(t,sp)=>{let bi=-1,bo=0;sp.forEach((s,i)=>{const o=ov(t.x,t.x+t.w,s);if(o>bo){bo=o;bi=i;}});return bi;};
+  let spans=cells.map(c=>({x0:c.x0,x1:c.x1}));
+  // items that straddle two header texts (titles, totals) never widen a column
+  items.forEach(t=>{t.col=-1;t.multi=cells.filter(c=>ov(t.x,t.x+t.w,c)>0).length>1;});
+  for(let iter=0;iter<4;iter++){
+    let changed=false;
+    items.forEach(t=>{if(t.col<0){const c=pick(t,spans);if(c>=0){t.col=c;changed=true;}}});
+    const nx=spans.map(s=>({x0:s.x0,x1:s.x1}));
+    items.forEach(t=>{if(t.col>=0&&!t.multi){const s=nx[t.col];s.x0=Math.min(s.x0,t.x);s.x1=Math.max(s.x1,t.x+t.w);}});
+    for(let i=0;i<nx.length;i++){            // expanded spans never cross a neighbour's header text
+      if(i>0)nx[i].x0=Math.max(nx[i].x0,cells[i-1].x1+1);
+      if(i<nx.length-1)nx[i].x1=Math.min(nx[i].x1,cells[i+1].x0-1);
     }
-    if(cells.some(c=>c!==''))out.push(cells);
+    spans=nx;
+    if(!changed)break;
   }
+  items.forEach(t=>{if(t.col<0){const cx=t.x+t.w/2;let bi=0,bd=1e9;spans.forEach((s,i)=>{const d=cx<s.x0?s.x0-cx:cx>s.x1?cx-s.x1:0;if(d<bd){bd=d;bi=i;}});t.col=bi;}});
+}
+/* no usable date column → old behaviour (visual rows, wrapped lines merged column-wise into the previous row) */
+function fallbackRows(all,cells,headerCells){
+  const byRow=new Map();
+  all.forEach(t=>{const k=t.pi+':'+Math.round(t.y/3);if(!byRow.has(k))byRow.set(k,{pi:t.pi,y:t.y,items:[]});byRow.get(k).items.push(t);});
+  const rows=[...byRow.values()].sort((p,q)=>p.pi-q.pi||q.y-p.y);
+  const out=[headerCells];
+  rows.forEach(r=>{
+    const c=new Array(cells.length).fill('');
+    r.items.sort((p,q)=>p.x-q.x).forEach(t=>{c[t.col]=(c[t.col]?c[t.col]+' ':'')+t.str;});
+    const hasDate=c.some(x=>{const d=parseDate(x);return d&&!isNaN(d);});
+    if(!hasDate&&out.length>1){const prev=out[out.length-1];c.forEach((v,j)=>{if(v)prev[j]=(prev[j]?prev[j]+' ':'')+v;});return;}
+    if(c.some(x=>x!==''))out.push(c);
+  });
   return out;
 }
 function clusterRows(items){
@@ -753,7 +836,7 @@ function mergeHeaderCells(items){
       cur.str+=' '+it.str;cur.w=(it.x+it.w)-cur.x;
     }else{cur={x:it.x,w:it.w,str:it.str};cells.push(cur);}
   });
-  return cells.map(c=>({cx:c.x+c.w/2,text:c.str.trim()}));
+  return cells.map(c=>({x0:c.x,x1:c.x+c.w,cx:c.x+c.w/2,text:c.str.trim()}));
 }
 function onLoaded(which,name,rows){
   rows=rows.filter(r=>r.some(c=>String(c).trim()!==''));
@@ -807,20 +890,25 @@ function opts(headers,sel){
   return `<option value="-1">— none —</option>`+
     headers.map((h,i)=>`<option value="${i}" ${i===sel?'selected':''}>${h||('col '+(i+1))}</option>`).join('');
 }
+/* header names se column mapping ka pehla guess */
+function guessMap(H){
+  const gDrcr=guessCol(H,G.drcr);
+  const notDC=(h,i)=>i===gDrcr;                                        // Dr/Cr indicator column ko amount/debit/credit guess me mat lo
+  const notDateBal=(h,i)=>i===gDrcr||/date|balance|\bbal\b|\bdt\b/.test(h); // "Value Date" / "Balance" amount column nahi hai
+  const gRef=guessCol(H,G.ref),gAmt=guessCol(H,G.amt,notDateBal),
+        gDr=guessCol(H,G.dr,notDC),gCr=guessCol(H,G.cr,notDC),
+        gDate=guessCol(H,G.date),gNarr=guessCol(H,G.narr);
+  const sDr=guessCol(H,G.dr.filter(k=>k.length>3),notDC),sCr=guessCol(H,G.cr.filter(k=>k.length>3),notDC);
+  const split=(gAmt<0&&(gDr>=0||gCr>=0))||(sDr>=0&&sCr>=0&&sDr!==sCr);
+  return {ref:gRef,amt:gAmt,dr:gDr,cr:gCr,drcr:gDrcr,date:gDate,narr:gNarr,mode:split?'split':'single'};
+}
 function buildMapping(){
   document.getElementById('mapCard').style.display='block';
   document.getElementById('runCard').style.display='block';
   ['bank','erp'].forEach(w=>{
     const st=S[w],H=headersOf(st),isBank=w==='bank';
-    const gDrcr=guessCol(H,G.drcr);
-    const notDC=(h,i)=>i===gDrcr;                                        // Dr/Cr indicator column ko amount/debit/credit guess me mat lo
-    const notDateBal=(h,i)=>i===gDrcr||/date|balance|\bbal\b|\bdt\b/.test(h); // "Value Date" / "Balance" amount column nahi hai
-    const gRef=guessCol(H,G.ref),gAmt=guessCol(H,G.amt,notDateBal),
-          gDr=guessCol(H,G.dr,notDC),gCr=guessCol(H,G.cr,notDC),
-          gDate=guessCol(H,G.date),gNarr=guessCol(H,G.narr);
-    const sDr=guessCol(H,G.dr.filter(k=>k.length>3),notDC),sCr=guessCol(H,G.cr.filter(k=>k.length>3),notDC);
-    const split=(gAmt<0&&(gDr>=0||gCr>=0))||(sDr>=0&&sCr>=0&&sDr!==sCr);
-    st.map={ref:gRef,amt:gAmt,dr:gDr,cr:gCr,drcr:gDrcr,date:gDate,narr:gNarr,mode:split?'split':'single'};
+    st.map=guessMap(H);
+    const {ref:gRef,amt:gAmt,dr:gDr,cr:gCr,drcr:gDrcr,date:gDate,narr:gNarr}=st.map,split=st.map.mode==='split';
     const host=document.getElementById(isBank?'mapBank':'mapErp');
     host.innerHTML=`
       <h3>${isBank?'Bank statement':'ERP entries'}</h3>
@@ -992,7 +1080,7 @@ function parseDate(v){
 function monIdx(x){return['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
   .indexOf(x.slice(0,3).toLowerCase());}
 function fixYr(y){return y<100?2000+y:y;}
-function normRef(v){return String(v==null?'':v).toUpperCase().replace(/[^A-Z0-9]/g,'');}
+function normRef(v){let s=String(v==null?'':v).toUpperCase().replace(/[^A-Z0-9]/g,'');if(/^\d+$/.test(s))s=s.replace(/^0+/,'');return s;} // 001749 → 1749, 0 → (koi ref nahi)
 /* Dr/Cr indicator column ki value padhna ("Dr", "CR", "Debit", "D", "Withdrawal"...) */
 const SIDE_DR=new Set(['d','dr','dr.','db','debit','debit.','withdrawal','withdrawals','withdraw','payment','paid','paid out','out','w']);
 const SIDE_CR=new Set(['c','cr','cr.','credit','credit.','deposit','deposits','receipt','received','paid in','in']);
@@ -1084,18 +1172,21 @@ function reconcile(){
   const closest=(list,amt)=>list.slice().sort((x,y)=>Math.abs(x.amt-amt)-Math.abs(y.amt-amt))[0];
 
   const matched=[],mism=[];
+  // ek hi ref 4+ rows me (ONLINE / RTGS / NEFT jaise labels) → wo reference nahi, usse match mat karo
+  const freq=new Map();bank.concat(erp).forEach(x=>{if(x.nref)freq.set(x.nref,(freq.get(x.nref)||0)+1);});
+  bank.concat(erp).forEach(x=>{if(x.nref&&freq.get(x.nref)>=4)x.nref='';});
   // index ERP by normalized ref
   const erpByRef=new Map();
   erp.forEach(e=>{if(e.nref){if(!erpByRef.has(e.nref))erpByRef.set(e.nref,[]);erpByRef.get(e.nref).push(e);}});
 
-  // pass 1a: reference match (opposite side)
+  // pass 1a: reference match (opposite side). Chhota ref (1–2 chars, jaise chq "12") sirf amount bhi same ho tabhi
   bank.forEach(b=>{
     if(!b.nref)return;
     const cands=(erpByRef.get(b.nref)||[]).filter(e=>!e.used&&sideOk(b,e));
     if(!cands.length)return;
     const pick=cands.find(e=>amtEq(e.amt,b.amt));
     if(pick){pick.used=true;b.used=true;matched.push({b,e:pick,via:'Reference'});}
-    else{ // ref matches but amount differs
+    else if(b.nref.length>=3){ // ref matches but amount differs
       const pk=closest(cands,b.amt);pk.used=true;b.used=true;
       mism.push({b,e:pk,via:'Ref, amount differs',diff:b.amt-pk.amt});
     }
@@ -1108,18 +1199,23 @@ function reconcile(){
     const pk=cands[0];pk.used=true;b.used=true;
     mism.push({b,e:pk,via:'Ref, Dr/Cr side differs',diff:b.amt-pk.amt});
   });
-  // pass 2: amount + date fallback (opposite side only)
-  bank.forEach(b=>{
-    if(b.used)return;
-    let best=null,bestGap=1e9;
-    for(const e of erp){
-      if(e.used||!sideOk(b,e))continue;
-      if(!amtEq(e.amt,b.amt))continue;
-      const g=dayDiff(b.date,e.date);
-      if(g<=win&&g<bestGap){best=e;bestGap=g;}
-    }
-    if(best){best.used=true;b.used=true;matched.push({b,e:best,via:'Amount+Date'});}
-  });
+  // pass 2: amount + date (opposite side only). Pehle same-date jode, phir 1 din, 2 din ... window tak —
+  // taaki ek jaise amounts (FD close 15,00,000 ×20) ki chain ek-ek din shift ho ke galat na jud jaye.
+  const erpByAmt=new Map();
+  erp.forEach(e=>{if(isNaN(e.amt))return;const k=Math.round(e.amt);if(!erpByAmt.has(k))erpByAmt.set(k,[]);erpByAmt.get(k).push(e);});
+  const amtCands=a=>{const out=[];for(let k=Math.round(a-tol)-1;k<=Math.round(a+tol)+1;k++){const l=erpByAmt.get(k);if(l)out.push(...l);}return out;};
+  for(let gap=0;gap<=win;gap++){
+    bank.forEach(b=>{
+      if(b.used||isNaN(b.amt))return;
+      let best=null,bestGap=1e9;
+      for(const e of amtCands(b.amt)){
+        if(e.used||!sideOk(b,e)||!amtEq(e.amt,b.amt))continue;
+        const g=dayDiff(b.date,e.date);
+        if(g<=gap&&g<bestGap){best=e;bestGap=g;}
+      }
+      if(best){best.used=true;b.used=true;matched.push({b,e:best,via:'Amount+Date'});}
+    });
+  }
 
   // pass 3 (optional): narration similarity (opposite side only)
   if(fuzzy){
@@ -1136,6 +1232,27 @@ function reconcile(){
     });
   }
 
+  // pass 4: split entries — ek entry ↔ 2–6 entries ka sum (TDS + interest, salary + advance, charges + GST)
+  const splitPass=(fromList,toList,fromIsBank)=>{
+    fromList.forEach(f=>{
+      if(f.used||isNaN(f.amt)||f.amt<=0)return;
+      const pool=toList.filter(e=>!e.used&&!isNaN(e.amt)&&e.amt>0&&e.amt<=f.amt+tol+1e-9
+          &&(fromIsBank?sideOk(f,e):sideOk(e,f))&&dayDiff(f.date,e.date)<=win)
+        .sort((p,q)=>dayDiff(f.date,p.date)-dayDiff(f.date,q.date)).slice(0,14);
+      if(pool.length<2)return;
+      const combo=subsetSum(pool.map(p=>p.amt),f.amt,tol);
+      if(!combo)return;
+      const parts=combo.map(i=>pool[i]);
+      parts.forEach(p=>{p.used=true;});f.used=true;
+      const comb={ref:'',nref:'',amt:sum(parts.map(p=>p.amt)),side:parts[0].side,date:parts[0].date,used:true,_parts:parts,
+        narr:parts.length+' entries: '+parts.map(p=>inr(p.amt)+' '+(p.narr||p.ref||'')).join(' | ')};
+      const via='Split ('+(fromIsBank?'1 bank ↔ '+parts.length+' ERP':parts.length+' bank ↔ 1 ERP')+')';
+      matched.push(fromIsBank?{b:f,e:comb,via}:{b:comb,e:f,via});
+    });
+  };
+  splitPass(bank,erp,true);
+  splitPass(erp,bank,false);
+
   const bankOnly=bank.filter(b=>!b.used);
   const erpOnly=erp.filter(e=>!e.used);
   const allDates=bank.concat(erp).map(x=>x.date).filter(d=>d&&!isNaN(d));
@@ -1150,6 +1267,21 @@ function reconcile(){
       erpOnly:sum(erpOnly.map(e=>e.amt))
     }};
   renderResults();
+}
+/* subset (2–6 items) jiska sum target ke tol ke andar ho; indexes lautata hai */
+function subsetSum(amts,target,tol){
+  const idx=amts.map((a,i)=>i).sort((p,q)=>amts[q]-amts[p]);
+  let best=null;
+  (function dfs(start,remain,chosen){
+    if(best)return;
+    if(chosen.length>=2&&Math.abs(remain)<=tol+1e-9){best=chosen.slice();return;}
+    if(chosen.length>=6||remain<-(tol+1e-9))return;
+    for(let k=start;k<idx.length&&!best;k++){
+      const a=amts[idx[k]];if(a>remain+tol+1e-9)continue;
+      chosen.push(idx[k]);dfs(k+1,remain-a,chosen);chosen.pop();
+    }
+  })(0,target,[]);
+  return best;
 }
 function skipTxt(r){const sk=(r&&r.skipped)||{},p=[];
   if(sk.bankDr)p.push('Bank Debit '+sk.bankDr);if(sk.bankCr)p.push('Bank Credit '+sk.bankCr);
