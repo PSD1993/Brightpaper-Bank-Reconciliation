@@ -350,6 +350,62 @@
     .print-only{display:block !important}
   }
 
+  /* ===== Dr/Cr side picker (bank side tick → ERP side auto-mirror) ===== */
+  .sidebanner{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+    margin:0 0 16px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:12.5px;
+    font-weight:600;color:var(--ink-soft);
+    background:linear-gradient(105deg,var(--brand-tint),#fff 50%,var(--green-tint))}
+  .sidebanner.bad{color:var(--mismatch);background:var(--mismatch-tint);border-color:var(--mismatch)}
+  .sidebanner .rule,.sidestrip .rule{display:inline-flex;align-items:center;gap:8px}
+  .sb-chip{display:inline-flex;align-items:center;padding:6px 13px;border-radius:30px;background:#fff;
+    border:1.5px solid var(--line);font-weight:700;color:var(--ink);font-size:12.5px;white-space:nowrap}
+  .sb-chip.bank{color:var(--brand-dark);border-color:var(--brand)}
+  .sb-chip.erp{color:var(--green-dark);border-color:var(--green)}
+  .sb-arrow{font-size:17px;color:var(--ink-soft);line-height:1}
+  .sb-and{font-size:12px;color:var(--ink-soft);margin:0 4px;font-weight:700}
+  .sidefield{background:#fff;border:1px solid var(--line-soft);border-radius:12px;padding:12px 12px 11px}
+  .sidepick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sidepick .sidebox{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1.5px solid var(--line);
+    border-radius:11px;background:#FBFAF7;cursor:pointer;transition:.14s;user-select:none;line-height:1.2;margin:0}
+  .sidepick .sidebox input{width:16px;height:16px;accent-color:var(--brand);margin:0;flex:none}
+  .sidepick .sidebox .sb-t{font-weight:700;font-size:12.5px;display:block}
+  .sidepick .sidebox .sb-s{font-size:10.5px;color:var(--ink-soft);display:block;margin-top:2px;font-weight:500}
+  .sidepick .sidebox:hover{border-color:var(--brand)}
+  .sidepick .sidebox.on{border-color:var(--brand);background:var(--brand-tint)}
+  .sidepick.locked .sidebox{cursor:default;border-style:dashed;opacity:.6}
+  .sidepick.locked .sidebox:hover{border-color:var(--line)}
+  .sidepick.locked .sidebox.on{opacity:1;border-style:solid;border-color:var(--green);background:var(--green-tint)}
+  .sidepick.locked .sidebox input{accent-color:var(--green)}
+  .mirror-note{margin-top:8px;font-size:11px;color:var(--green-dark);background:var(--green-tint);
+    padding:6px 10px;border-radius:8px;line-height:1.45}
+  .sidecount{margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--ink-soft);background:#FBFAF7;
+    border:1px solid var(--line-soft);padding:7px 10px;border-radius:8px;line-height:1.55}
+  .sidecount:empty{display:none}
+  .sidecount b{font-weight:600;color:var(--ink-soft)}
+  .sidecount b.use{color:var(--green)}
+  .sidecount .warnish{color:var(--mismatch);font-family:var(--sans)}
+  .colgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .colbox{transition:.18s}
+  .colbox.off{opacity:.38}
+  .sublbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);
+    margin-bottom:4px;display:flex;align-items:center;gap:5px}
+  .sublbl .tick:empty{display:none}
+  .colbox.on .sublbl{color:var(--brand)}
+  .colbox.on.erp .sublbl{color:var(--green)}
+  .sidestrip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:42px;padding:6px 10px;
+    border:1px dashed var(--line);border-radius:10px;background:#FBFAF7;font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .dc{display:inline-block;padding:2px 9px;border-radius:20px;font-family:var(--mono);font-size:10.5px;font-weight:700;
+    letter-spacing:.02em;white-space:nowrap}
+  .dc.dr{background:var(--bankonly-tint);color:#9A5E00}
+  .dc.cr{background:var(--green-tint);color:var(--green-dark)}
+  .dc.na{background:var(--line-soft);color:var(--ink-soft)}
+  .dcarr{color:var(--ink-soft);margin:0 5px;font-size:11px}
+  .sidenote{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);
+    margin:-6px 0 16px;padding:9px 12px;background:#FBFAF7;border:1px dashed var(--line);border-radius:10px}
+  .sidenote:empty{display:none}
+  .kpi-v.rule{font-family:var(--sans);font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:5px;padding-top:5px}
+  .kpi-v.rule .row{display:inline-flex;align-items:center}
+
   /* presets + misc */
   .presetbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:16px;
     padding:11px 14px;background:#faf8f4;border:1px solid var(--line-soft);border-radius:12px}
@@ -477,7 +533,7 @@
   <!-- STEP 1: UPLOAD -->
   <section class="card">
     <div class="card-h"><span class="n">1</span><h2>Upload both files</h2>
-      <span class="hint">PDF, Excel or CSV — bank statement (PDF ok) & ERP export</span></div>
+      <span class="hint">PDF, Excel or CSV — bank statement (PDF ok) &amp; ERP export</span></div>
     <div class="card-b">
       <div class="drops">
         <label class="drop" id="dropBank">
@@ -497,9 +553,10 @@
   <!-- STEP 2: MAP -->
   <section class="card" id="mapCard" style="display:none">
     <div class="card-h"><span class="n">2</span><h2>Map the columns</h2>
-      <span class="hint">Tell the tool which column is which. It has pre-guessed for you.</span></div>
+      <span class="hint">Tell the tool which column is which. It has pre-guessed for you. Bank side pe Debit/Credit tick karo — ERP side apne aap ulti set hogi.</span></div>
     <div class="card-b">
       <div class="presetbar" id="presetBar"></div>
+      <div class="sidebanner" id="sideBanner"></div>
       <div class="maprow">
         <div class="mapcol" id="mapBank"></div>
         <div class="mapcol" id="mapErp"></div>
@@ -520,8 +577,10 @@
           <label>Date window (days)<span class="desc"> — for amount+date fallback</span></label>
           <input type="number" id="win" value="3" min="0" step="1" />
         </div>
-        <div class="check"><input type="checkbox" id="absAmt" checked />
-          <label style="margin:0">Match on absolute amount (ignore +/− sign)</label></div>
+        <div class="field" style="min-width:280px">
+          <label>Dr / Cr side rule<span class="desc"> — Step 2 me bank side tick se set hota hai</span></label>
+          <div class="sidestrip" id="sideStrip"></div>
+        </div>
         <div class="check"><input type="checkbox" id="fuzzy" />
           <label style="margin:0">Also match by narration similarity (extra pass)</label></div>
       </div>
@@ -540,6 +599,7 @@
       <div class="card-b">
         <div class="hero" id="resHero"></div>
         <div class="segbar" id="segbar"></div>
+        <div class="sidenote" id="sideNote"></div>
         <div class="cards" id="statCards"></div>
       </div>
     </div>
@@ -569,12 +629,17 @@ if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc=
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
 
 /* ---------- state ---------- */
-const S={bank:null,erp:null,result:null,view:'matched'};
+/* sideDr / sideCr = bank side pe kaunsi side tick hai. ERP side hamesha iska ulta (mirror):
+   Bank Debit ↔ ERP Credit, Bank Credit ↔ ERP Debit.  Last choice browser me yaad rehti hai. */
+const S={bank:null,erp:null,result:null,view:'matched',sideDr:true,sideCr:false};
+(function(){try{var x=JSON.parse(localStorage.getItem('br_side')||'null');if(x&&(x.dr||x.cr)){S.sideDr=!!x.dr;S.sideCr=!!x.cr;}}catch(e){}})();
+function saveSide(){try{localStorage.setItem('br_side',JSON.stringify({dr:S.sideDr,cr:S.sideCr}));}catch(e){}}
 const G={ // header-name guesses
-  ref:['utr','rrn','ref','reference','chq','cheque','cheque no','chequeno','instrument','txn id','transaction id','tran id'],
+  ref:['utr','rrn','ref','reference','chq','cheque','cheque no','chequeno','instrument','txn id','transaction id','tran id','vch no','vch no.','voucher no'],
   amt:['amount','amt','txn amount','transaction amount','value'],
   dr:['debit','withdrawal','dr','paid out','payment'],
   cr:['credit','deposit','cr','paid in','receipt'],
+  drcr:['dr/cr','cr/dr','dr / cr','cr / dr','dr-cr','cr-dr','dr cr','cr dr','drcr','crdr','d/c','debit/credit','credit/debit','dr/cr indicator'],
   date:['date','txn date','value date','transaction date','posting date','tran date'],
   narr:['narration','particulars','description','remark','remarks','details','desc','memo']
 };
@@ -731,10 +796,11 @@ function paintDrop(which,name,n){
 });
 
 /* ---------- mapping UI ---------- */
-function guessCol(headers,keys){
-  const low=headers.map(h=>h.toLowerCase());
-  for(const k of keys){const i=low.findIndex(h=>h===k);if(i>=0)return i;}
-  for(const k of keys){const i=low.findIndex(h=>h.includes(k));if(i>=0)return i;}
+function guessCol(headers,keys,skip){
+  const low=headers.map(h=>String(h).toLowerCase().trim());
+  const ok=i=>!(skip&&skip(low[i],i));
+  for(const k of keys){const i=low.findIndex((h,j)=>h===k&&ok(j));if(i>=0)return i;}
+  for(const k of keys){const i=low.findIndex((h,j)=>h.includes(k)&&ok(j));if(i>=0)return i;}
   return -1;
 }
 function opts(headers,sel){
@@ -745,15 +811,19 @@ function buildMapping(){
   document.getElementById('mapCard').style.display='block';
   document.getElementById('runCard').style.display='block';
   ['bank','erp'].forEach(w=>{
-    const st=S[w],H=headersOf(st);
-    const gRef=guessCol(H,G.ref),gAmt=guessCol(H,G.amt),
-          gDr=guessCol(H,G.dr),gCr=guessCol(H,G.cr),
+    const st=S[w],H=headersOf(st),isBank=w==='bank';
+    const gDrcr=guessCol(H,G.drcr);
+    const notDC=(h,i)=>i===gDrcr;                                        // Dr/Cr indicator column ko amount/debit/credit guess me mat lo
+    const notDateBal=(h,i)=>i===gDrcr||/date|balance|\bbal\b|\bdt\b/.test(h); // "Value Date" / "Balance" amount column nahi hai
+    const gRef=guessCol(H,G.ref),gAmt=guessCol(H,G.amt,notDateBal),
+          gDr=guessCol(H,G.dr,notDC),gCr=guessCol(H,G.cr,notDC),
           gDate=guessCol(H,G.date),gNarr=guessCol(H,G.narr);
-    const split=(gAmt<0&&(gDr>=0||gCr>=0));
-    st.map={ref:gRef,amt:gAmt,dr:gDr,cr:gCr,date:gDate,narr:gNarr,mode:split?'split':'single'};
-    const host=document.getElementById(w==='bank'?'mapBank':'mapErp');
+    const sDr=guessCol(H,G.dr.filter(k=>k.length>3),notDC),sCr=guessCol(H,G.cr.filter(k=>k.length>3),notDC);
+    const split=(gAmt<0&&(gDr>=0||gCr>=0))||(sDr>=0&&sCr>=0&&sDr!==sCr);
+    st.map={ref:gRef,amt:gAmt,dr:gDr,cr:gCr,drcr:gDrcr,date:gDate,narr:gNarr,mode:split?'split':'single'};
+    const host=document.getElementById(isBank?'mapBank':'mapErp');
     host.innerHTML=`
-      <h3>${w==='bank'?'Bank statement':'ERP entries'}</h3>
+      <h3>${isBank?'Bank statement':'ERP entries'}</h3>
       <div class="field"><label>Reference / UTR / Cheque no.</label>
         <select data-w="${w}" data-f="ref">${opts(H,gRef)}</select></div>
       <div class="field"><label>Amount</label>
@@ -762,15 +832,21 @@ function buildMapping(){
           <button data-w="${w}" data-mode="split" class="${split?'act':''}">Debit + Credit</button>
         </div>
         <div data-amt="single" data-w="${w}" style="${split?'display:none':''}">
-          <select data-w="${w}" data-f="amt">${opts(H,gAmt)}</select></div>
+          <select data-w="${w}" data-f="amt">${opts(H,gAmt)}</select>
+          <div class="sublbl" style="margin-top:9px">Dr / Cr indicator column — optional</div>
+          <select data-w="${w}" data-f="drcr">${opts(H,gDrcr)}</select>
+          <div style="font-size:11px;color:var(--ink-soft);margin-top:5px">Single column me side aise pehchani jaati hai: minus (−) ya "Dr" = Debit, baaki = Credit. File me alag Dr/Cr column ho to use upar choose karo.</div>
+        </div>
         <div data-amt="split" data-w="${w}" style="${split?'':'display:none'}">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <select data-w="${w}" data-f="dr">${opts(H,gDr)}</select>
-            <select data-w="${w}" data-f="cr">${opts(H,gCr)}</select>
+          <div class="colgrid">
+            <div class="colbox${isBank?'':' erp'}" data-w="${w}" data-col="dr"><div class="sublbl"><span class="tick"></span>Debit column</div>
+              <select data-w="${w}" data-f="dr">${opts(H,gDr)}</select></div>
+            <div class="colbox${isBank?'':' erp'}" data-w="${w}" data-col="cr"><div class="sublbl"><span class="tick"></span>Credit column</div>
+              <select data-w="${w}" data-f="cr">${opts(H,gCr)}</select></div>
           </div>
-          <div class="desc" style="font-size:11px;color:var(--ink-soft);margin-top:4px">Left = Debit, Right = Credit</div>
         </div>
       </div>
+      ${sideHtml(w)}
       <div class="field"><label>Date</label>
         <select data-w="${w}" data-f="date">${opts(H,gDate)}</select>
         <div class="preview" data-prev="date" data-w="${w}"></div></div>
@@ -781,19 +857,98 @@ function buildMapping(){
   });
   bindMapEvents();
   buildPresetBar();
+  syncSideUI();
   validate();
+}
+/* Dr/Cr side picker — bank side pe tick karo, ERP side apne aap mirror (ulti) ho jaati hai */
+function sideHtml(w){
+  const isBank=w==='bank';
+  return `
+      <div class="field sidefield">
+        <label>${isBank?'Kaunsi side match karni hai?':'ERP side'} <span class="desc">${isBank?'— tick karo; ERP side apne aap ulti (mirror) set hogi':'— auto, bank ke opposite &#128274;'}</span></label>
+        <div class="sidepick${isBank?'':' locked'}" data-w="${w}">
+          <label class="sidebox" data-side="dr"><input type="checkbox" data-w="${w}" data-side="dr"${isBank?'':' disabled'}/>
+            <span><span class="sb-t">Debit (Dr)</span><span class="sb-s">${isBank?'withdrawal / payment':'bank Credit ke saamne'}</span></span></label>
+          <label class="sidebox" data-side="cr"><input type="checkbox" data-w="${w}" data-side="cr"${isBank?'':' disabled'}/>
+            <span><span class="sb-t">Credit (Cr)</span><span class="sb-s">${isBank?'deposit / receipt':'bank Debit ke saamne'}</span></span></label>
+        </div>
+        ${isBank?'':'<div class="mirror-note">&#128274; Mirror rule: Bank <b>Debit</b> &#8596; ERP <b>Credit</b> &nbsp;&middot;&nbsp; Bank <b>Credit</b> &#8596; ERP <b>Debit</b></div>'}
+        <div class="sidecount" data-w="${w}"></div>
+      </div>`;
 }
 function bindMapEvents(){
   document.querySelectorAll('select[data-f]').forEach(s=>{
     s.onchange=()=>{S[s.dataset.w].map[s.dataset.f]=parseInt(s.value);
-      if(s.dataset.f==='date')updateDatePreview(s.dataset.w);validate();};
+      if(s.dataset.f==='date')updateDatePreview(s.dataset.w);
+      updateSideCounts();validate();};
   });
   document.querySelectorAll('button[data-mode]').forEach(b=>{
     b.onclick=()=>{const w=b.dataset.w,m=b.dataset.mode;S[w].map.mode=m;
       document.querySelectorAll(`button[data-w="${w}"][data-mode]`).forEach(x=>x.classList.toggle('act',x.dataset.mode===m));
       document.querySelector(`[data-amt="single"][data-w="${w}"]`).style.display=m==='single'?'':'none';
       document.querySelector(`[data-amt="split"][data-w="${w}"]`).style.display=m==='split'?'':'none';
-      validate();};
+      syncSideUI();validate();};
+  });
+  // bank side ke ticks → ERP side mirror
+  document.querySelectorAll('.sidepick[data-w="bank"] input[data-side]').forEach(cb=>{
+    cb.onchange=()=>{if(cb.dataset.side==='dr')S.sideDr=cb.checked;else S.sideCr=cb.checked;
+      saveSide();syncSideUI();validate();};
+  });
+}
+function sideRuleText(short){
+  const p=[];
+  if(S.sideDr)p.push(short?'Bank Dr ↔ ERP Cr':'Bank Debit ↔ ERP Credit');
+  if(S.sideCr)p.push(short?'Bank Cr ↔ ERP Dr':'Bank Credit ↔ ERP Debit');
+  return p.join(' · ')||'—';
+}
+function ruleChipsHtml(dr,cr){
+  const rows=[];
+  if(dr)rows.push('<span class="rule"><span class="sb-chip bank">Bank &middot; Debit</span><span class="sb-arrow">&#8596;</span><span class="sb-chip erp">ERP &middot; Credit</span></span>');
+  if(cr)rows.push('<span class="rule"><span class="sb-chip bank">Bank &middot; Credit</span><span class="sb-arrow">&#8596;</span><span class="sb-chip erp">ERP &middot; Debit</span></span>');
+  return rows.join('<span class="sb-and">&amp;</span>');
+}
+function ruleRows(side){
+  const rows=[];
+  if(side.dr)rows.push('<span class="row"><span class="dc dr">Bank Dr</span><span class="dcarr">&#8596;</span><span class="dc cr">ERP Cr</span></span>');
+  if(side.cr)rows.push('<span class="row"><span class="dc cr">Bank Cr</span><span class="dcarr">&#8596;</span><span class="dc dr">ERP Dr</span></span>');
+  return rows.join('');
+}
+function syncSideUI(){
+  ['bank','erp'].forEach(w=>{
+    // ERP side = bank ka ulta: bank Dr tick → ERP Cr, bank Cr tick → ERP Dr
+    const dr=w==='bank'?S.sideDr:S.sideCr, cr=w==='bank'?S.sideCr:S.sideDr;
+    document.querySelectorAll(`.sidepick[data-w="${w}"] .sidebox`).forEach(box=>{
+      const on=box.dataset.side==='dr'?dr:cr;
+      box.classList.toggle('on',on);
+      const inp=box.querySelector('input');if(inp)inp.checked=on;
+    });
+    const split=!!(S[w]&&S[w].map&&S[w].map.mode==='split');
+    document.querySelectorAll(`.colbox[data-w="${w}"]`).forEach(cb=>{
+      const on=cb.dataset.col==='dr'?dr:cr;
+      cb.classList.toggle('off',split&&!on);cb.classList.toggle('on',on);
+      const t=cb.querySelector('.tick');if(t)t.innerHTML=on?'&#10003;':'';
+    });
+  });
+  const ok=S.sideDr||S.sideCr;
+  const ban=document.getElementById('sideBanner');
+  if(ban){ban.classList.toggle('bad',!ok);
+    ban.innerHTML=ok?'<span>Matching rule</span>'+ruleChipsHtml(S.sideDr,S.sideCr)
+      :'&#9888;&#65039; Bank side me kam se kam ek side (Debit ya Credit) tick karo.';}
+  const strip=document.getElementById('sideStrip');
+  if(strip)strip.innerHTML=ok?ruleChipsHtml(S.sideDr,S.sideCr):'<span style="color:var(--mismatch)">Koi side tick nahi hai — Step 2 dekho</span>';
+  updateSideCounts();
+}
+function updateSideCounts(){
+  ['bank','erp'].forEach(w=>{
+    const el=document.querySelector(`.sidecount[data-w="${w}"]`);
+    if(!el||!S[w]||!S[w].map)return;
+    let recs;try{recs=buildRecords(w);}catch(e){el.innerHTML='';return;}
+    const dr=recs.filter(x=>x.side==='dr').length,cr=recs.filter(x=>x.side==='cr').length,na=recs.length-dr-cr;
+    const useDr=w==='bank'?S.sideDr:S.sideCr, useCr=w==='bank'?S.sideCr:S.sideDr;
+    let h=`Is file me: <b class="${useDr?'use':''}">Debit ${dr}</b> &middot; <b class="${useCr?'use':''}">Credit ${cr}</b>`;
+    if(na)h+=` &middot; side unknown ${na} <span style="opacity:.75">(dono side me try honge)</span>`;
+    if(recs.length&&!dr&&!cr)h+=`<br><span class="warnish">&#9888; Side pata nahi chal rahi — Debit + Credit mode ya Dr/Cr indicator column choose karo.</span>`;
+    el.innerHTML=h;
   });
 }
 function updateDatePreview(w){
@@ -838,36 +993,71 @@ function monIdx(x){return['jan','feb','mar','apr','may','jun','jul','aug','sep',
   .indexOf(x.slice(0,3).toLowerCase());}
 function fixYr(y){return y<100?2000+y:y;}
 function normRef(v){return String(v==null?'':v).toUpperCase().replace(/[^A-Z0-9]/g,'');}
-function rowAmt(r,map){
+/* Dr/Cr indicator column ki value padhna ("Dr", "CR", "Debit", "D", "Withdrawal"...) */
+const SIDE_DR=new Set(['d','dr','dr.','db','debit','debit.','withdrawal','withdrawals','withdraw','payment','paid','paid out','out','w']);
+const SIDE_CR=new Set(['c','cr','cr.','credit','credit.','deposit','deposits','receipt','received','paid in','in']);
+function parseSide(v){
+  const s=String(v==null?'':v).trim().toLowerCase().replace(/\s+/g,' ');
+  if(!s)return'';
+  if(SIDE_DR.has(s))return'dr';
+  if(SIDE_CR.has(s))return'cr';
+  if(/^(dr|debit)\b/.test(s))return'dr';
+  if(/^(cr|credit)\b/.test(s))return'cr';
+  return'';
+}
+function sideLbl(s){return s==='dr'?'Dr':s==='cr'?'Cr':'—';}
+/* har row ka amount (hamesha positive) + side ('dr' / 'cr' / '' = pata nahi) */
+function rowAmtSide(r,map){
   if(map.mode==='split'){
-    const dr=map.dr>=0?parseAmt(r[map.dr]):0, cr=map.cr>=0?parseAmt(r[map.cr]):0;
-    const d=isNaN(dr)?0:dr, c=isNaN(cr)?0:cr;
-    if(c&&!d)return c; if(d&&!c)return -d; return c-d;
+    const dr=map.dr>=0?parseAmt(r[map.dr]):NaN, cr=map.cr>=0?parseAmt(r[map.cr]):NaN;
+    const d=isNaN(dr)?0:Math.abs(dr), c=isNaN(cr)?0:Math.abs(cr);
+    if(d&&!c)return{amt:d,side:'dr'};
+    if(c&&!d)return{amt:c,side:'cr'};
+    if(!d&&!c)return{amt:NaN,side:''};
+    const net=c-d;return{amt:Math.abs(net),side:net<0?'dr':'cr'};
   }
-  return parseAmt(r[map.amt]);
+  const raw=r[map.amt],a=parseAmt(raw);
+  if(isNaN(a))return{amt:NaN,side:''};
+  let side=map.drcr>=0?parseSide(r[map.drcr]):'';
+  if(!side){const s=String(raw);if(/dr\b/i.test(s)&&!/cr\b/i.test(s))side='dr';else if(/cr\b/i.test(s))side='cr';else if(a<0)side='dr';}
+  return{amt:Math.abs(a),side};
 }
 function buildRecords(w){
   const st=S[w],map=st.map,rows=dataOf(st);
-  return rows.map((r,i)=>({
-    _i:i,_side:w,raw:r,
-    ref:map.ref>=0?String(r[map.ref]).trim():'',
-    nref:map.ref>=0?normRef(r[map.ref]):'',
-    amt:rowAmt(r,map),
-    date:map.date>=0?parseDate(r[map.date]):null,
-    narr:map.narr>=0?String(r[map.narr]).trim():'',
-    used:false
-  })).filter(x=>!(isNaN(x.amt)&&!x.nref));
+  const recs=rows.map((r,i)=>{
+    const a=rowAmtSide(r,map);
+    return {_i:i,_side:w,raw:r,
+      ref:map.ref>=0?String(r[map.ref]==null?'':r[map.ref]).trim():'',
+      nref:map.ref>=0?normRef(r[map.ref]):'',
+      amt:a.amt,side:a.side,
+      date:map.date>=0?parseDate(r[map.date]):null,
+      narr:map.narr>=0?String(r[map.narr]==null?'':r[map.narr]).trim():'',
+      used:false};
+  }).filter(x=>!(isNaN(x.amt)&&!x.nref));
+  if(map.mode==='single'&&map.drcr<0){
+    // sign-based: agar file me koi Debit (minus / "Dr") mila, to baaki positive = Credit; warna side unknown
+    if(recs.some(x=>x.side==='dr'))recs.forEach(x=>{if(!x.side&&!isNaN(x.amt))x.side='cr';});
+  }
+  return recs;
 }
 
 /* ---------- validation ---------- */
 function validate(){
   const btn=document.getElementById('runBtn'),warn=document.getElementById('runWarn');
   let msg='';
+  if(!S.sideDr&&!S.sideCr)msg='Bank side me kam se kam ek side tick karo — Debit ya Credit (Step 2).';
   for(const w of ['bank','erp']){
+    if(msg)break;
     const m=S[w].map,name=w==='bank'?'Bank':'ERP';
-    const hasAmt=m.mode==='single'?m.amt>=0:(m.dr>=0||m.cr>=0);
-    if(!hasAmt)msg=`Pick the amount column for ${name}.`;
-    else if(m.date<0&&!msg)msg=`Pick the date column for ${name} (needed for fallback).`;
+    if(m.mode==='single'){
+      if(m.amt<0)msg=`${name} ka Amount column choose karo.`;
+    }else{
+      // ERP side bank ke opposite: bank Debit → ERP Credit column, bank Credit → ERP Debit column
+      const needDr=w==='bank'?S.sideDr:S.sideCr, needCr=w==='bank'?S.sideCr:S.sideDr;
+      if(needDr&&m.dr<0)msg=`${name} ka Debit column choose karo${w==='erp'?' (bank Credit ke saamne)':''}.`;
+      else if(needCr&&m.cr<0)msg=`${name} ka Credit column choose karo${w==='erp'?' (bank Debit ke saamne)':''}.`;
+    }
+    if(!msg&&m.date<0)msg=`${name} ka Date column choose karo (amount+date fallback ke liye zaroori).`;
   }
   if(msg){btn.disabled=true;warn.textContent=msg;}
   else{btn.disabled=false;warn.textContent='';}
@@ -877,36 +1067,53 @@ function validate(){
 function reconcile(){
   const tol=parseFloat(document.getElementById('tol').value)||0;
   const win=parseInt(document.getElementById('win').value)||0;
-  const abs=document.getElementById('absAmt').checked;
   const fuzzy=document.getElementById('fuzzy')&&document.getElementById('fuzzy').checked;
-  const bank=buildRecords('bank'), erp=buildRecords('erp');
-  const amtEq=(a,b)=>{const x=abs?Math.abs(a):a,y=abs?Math.abs(b):b;return Math.abs(x-y)<=tol+1e-9;};
+  const sideDr=S.sideDr,sideCr=S.sideCr;
+  const MIRROR={dr:'cr',cr:'dr'};
+  const bankAll=buildRecords('bank'), erpAll=buildRecords('erp');
+  // Side filter — Bank Debit ↔ ERP Credit, Bank Credit ↔ ERP Debit. Unknown side dono me chalti hai.
+  const bankSel=s=>s===''||(s==='dr'&&sideDr)||(s==='cr'&&sideCr);
+  const erpSel=s=>s===''||(s==='cr'&&sideDr)||(s==='dr'&&sideCr);
+  const bank=bankAll.filter(b=>bankSel(b.side)), erp=erpAll.filter(e=>erpSel(e.side));
+  const skipped={bankDr:0,bankCr:0,erpDr:0,erpCr:0};
+  bankAll.forEach(b=>{if(!bankSel(b.side))skipped[b.side==='dr'?'bankDr':'bankCr']++;});
+  erpAll.forEach(e=>{if(!erpSel(e.side))skipped[e.side==='dr'?'erpDr':'erpCr']++;});
+  const amtEq=(a,b)=>Math.abs(Math.abs(a)-Math.abs(b))<=tol+1e-9;
+  const sideOk=(b,e)=>!b.side||!e.side||MIRROR[b.side]===e.side; // sirf opposite side hi match hogi
   const dayDiff=(a,b)=>(a&&b)?Math.abs((a-b)/864e5):999;
+  const closest=(list,amt)=>list.slice().sort((x,y)=>Math.abs(x.amt-amt)-Math.abs(y.amt-amt))[0];
 
   const matched=[],mism=[];
   // index ERP by normalized ref
   const erpByRef=new Map();
   erp.forEach(e=>{if(e.nref){if(!erpByRef.has(e.nref))erpByRef.set(e.nref,[]);erpByRef.get(e.nref).push(e);}});
 
-  // pass 1: reference match
+  // pass 1a: reference match (opposite side)
   bank.forEach(b=>{
     if(!b.nref)return;
-    const cands=(erpByRef.get(b.nref)||[]).filter(e=>!e.used);
+    const cands=(erpByRef.get(b.nref)||[]).filter(e=>!e.used&&sideOk(b,e));
     if(!cands.length)return;
-    let pick=cands.find(e=>amtEq(e.amt,b.amt));
+    const pick=cands.find(e=>amtEq(e.amt,b.amt));
     if(pick){pick.used=true;b.used=true;matched.push({b,e:pick,via:'Reference'});}
     else{ // ref matches but amount differs
-      const pk=cands.sort((x,y)=>Math.abs(Math.abs(x.amt)-Math.abs(b.amt))-Math.abs(Math.abs(y.amt)-Math.abs(b.amt)))[0];
-      pk.used=true;b.used=true;
-      mism.push({b,e:pk,via:'Ref, amount differs',diff:abs?Math.abs(b.amt)-Math.abs(pk.amt):(b.amt)-(pk.amt)});
+      const pk=closest(cands,b.amt);pk.used=true;b.used=true;
+      mism.push({b,e:pk,via:'Ref, amount differs',diff:b.amt-pk.amt});
     }
   });
-  // pass 2: amount + date fallback
+  // pass 1b: same ref + same amount, par ERP entry galat (same) side pe post hui hai → flag karo
+  bank.forEach(b=>{
+    if(b.used||!b.nref)return;
+    const cands=(erpByRef.get(b.nref)||[]).filter(e=>!e.used&&amtEq(e.amt,b.amt));
+    if(!cands.length)return;
+    const pk=cands[0];pk.used=true;b.used=true;
+    mism.push({b,e:pk,via:'Ref, Dr/Cr side differs',diff:b.amt-pk.amt});
+  });
+  // pass 2: amount + date fallback (opposite side only)
   bank.forEach(b=>{
     if(b.used)return;
     let best=null,bestGap=1e9;
     for(const e of erp){
-      if(e.used)continue;
+      if(e.used||!sideOk(b,e))continue;
       if(!amtEq(e.amt,b.amt))continue;
       const g=dayDiff(b.date,e.date);
       if(g<=win&&g<bestGap){best=e;bestGap=g;}
@@ -914,13 +1121,13 @@ function reconcile(){
     if(best){best.used=true;b.used=true;matched.push({b,e:best,via:'Amount+Date'});}
   });
 
-  // pass 3 (optional): narration similarity
+  // pass 3 (optional): narration similarity (opposite side only)
   if(fuzzy){
     bank.forEach(b=>{
       if(b.used||!b.narr)return;
       let best=null,bs=0;
       for(const e of erp){
-        if(e.used||!e.narr)continue;
+        if(e.used||!e.narr||!sideOk(b,e))continue;
         if(!amtEq(e.amt,b.amt))continue;
         const s=narrSim(b.narr,e.narr);
         if(s>=0.5&&s>bs){best=e;bs=s;}
@@ -933,16 +1140,21 @@ function reconcile(){
   const erpOnly=erp.filter(e=>!e.used);
   const allDates=bank.concat(erp).map(x=>x.date).filter(d=>d&&!isNaN(d));
   const period=allDates.length?{from:new Date(Math.min.apply(null,allDates)),to:new Date(Math.max.apply(null,allDates))}:null;
-  S.result={matched,mism,bankOnly,erpOnly,abs,period,
+  S.result={matched,mism,bankOnly,erpOnly,period,skipped,
+    side:{dr:sideDr,cr:sideCr},rule:sideRuleText(),ruleShort:sideRuleText(true),
     counts:{matched:matched.length,mism:mism.length,bankOnly:bankOnly.length,erpOnly:erpOnly.length},
     totals:{
-      matched:sum(matched.map(m=>Math.abs(m.b.amt))),
-      mism:sum(mism.map(m=>Math.abs(m.b.amt))),
-      bankOnly:sum(bankOnly.map(b=>Math.abs(b.amt))),
-      erpOnly:sum(erpOnly.map(e=>Math.abs(e.amt)))
+      matched:sum(matched.map(m=>m.b.amt)),
+      mism:sum(mism.map(m=>m.b.amt)),
+      bankOnly:sum(bankOnly.map(b=>b.amt)),
+      erpOnly:sum(erpOnly.map(e=>e.amt))
     }};
   renderResults();
 }
+function skipTxt(r){const sk=(r&&r.skipped)||{},p=[];
+  if(sk.bankDr)p.push('Bank Debit '+sk.bankDr);if(sk.bankCr)p.push('Bank Credit '+sk.bankCr);
+  if(sk.erpDr)p.push('ERP Debit '+sk.erpDr);if(sk.erpCr)p.push('ERP Credit '+sk.erpCr);
+  return p.join(', ');}
 function sum(a){return a.reduce((s,x)=>s+(isNaN(x)?0:x),0);}
 function inr(n){if(isNaN(n))return'—';return (n<0?'-':'')+'₹'+Math.abs(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fdate(d){return d&&!isNaN(d)?d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—';}
@@ -959,7 +1171,11 @@ function renderResults(){
   document.getElementById('results').style.display='block';
   document.getElementById('t3').innerHTML='<b>3</b> Reconcile';
   const rate=total?Math.round(r.counts.matched/total*100):0;
-  document.getElementById('matchRate').textContent=`${r.counts.matched} of ${total} lines matched · ${rate}% clean`;
+  document.getElementById('matchRate').textContent=`${r.ruleShort} · ${r.counts.matched} of ${total} lines matched · ${rate}% clean`;
+  const st=skipTxt(r);
+  document.getElementById('sideNote').innerHTML=st
+    ?'<b>Side filter:</b> '+st+' rows skip hui (dusri side &mdash; is run me reconcile nahi hui). Dono side chahiye to Step 2 me Debit aur Credit dono tick karo.'
+    :'';
   // seg bar
   const seg=document.getElementById('segbar');seg.innerHTML='';
   ['matched','mism','bankOnly','erpOnly'].forEach(k=>{
@@ -1015,6 +1231,7 @@ function buildHero(r,total,rate){
       '<div class="kpi"><div class="kpi-l">Matched value</div><div class="kpi-v green">'+inr(r.totals.matched)+'</div></div>'+
       '<div class="kpi"><div class="kpi-l">Needs attention</div><div class="kpi-v '+(exc?'red':'green')+'">'+exc+' item'+(exc!==1?'s':'')+'</div></div>'+
       '<div class="kpi"><div class="kpi-l">Total lines</div><div class="kpi-v">'+total+'</div></div>'+
+      '<div class="kpi"><div class="kpi-l">Side rule</div><div class="kpi-v rule">'+ruleRows(r.side)+'</div></div>'+
     '</div>';
 }
 function prDonut(r,total,rate){
@@ -1035,6 +1252,7 @@ function buildPrintReport(r,total,rate){
   const refno=r.period?('BR/'+r.period.from.getFullYear()+'-'+String(r.period.from.getMonth()+1).padStart(2,'0')):'BR/'+new Date().toISOString().slice(0,7);
   const META=[['matched','Matched'],['mism','Amount mismatch'],['bankOnly','Bank only'],['erpOnly','ERP only']];
   const totalAmt=r.totals.matched+r.totals.mism+r.totals.bankOnly+r.totals.erpOnly;
+  const skp=skipTxt(r);
   const stats=META.map(function(a){var k=a[0],lbl=a[1];
     return '<div class="pr-stat" style="--c:'+HEX[k]+'"><div class="ps-lbl">'+lbl+'</div><div class="ps-num">'+r.counts[k]+'</div><div class="ps-amt">'+inr(r.totals[k])+'</div></div>';}).join('');
   const sumRows=META.map(function(a){var k=a[0],lbl=a[1];
@@ -1059,6 +1277,8 @@ function buildPrintReport(r,total,rate){
       '<div><span class="ml">Generated on</span><span class="mv">'+gen+'</span></div>'+
       '<div><span class="ml">Prepared by</span><span class="mv">'+by+'</span></div>'+
       '<div><span class="ml">Reconciled</span><span class="mv" style="color:#207040">'+rate+'% clean</span></div>'+
+      '<div><span class="ml">Side rule</span><span class="mv">'+(r.rule||'—')+'</span></div>'+
+      '<div><span class="ml">Skipped (other side)</span><span class="mv">'+(skp||'none')+'</span></div>'+
       (APPLIED_PRESET?('<div><span class="ml">Bank account</span><span class="mv">'+APPLIED_PRESET+'</span></div>'):'')+
       ((CO.gst||CO.branch)?('<div><span class="ml">GST No.</span><span class="mv">'+(CO.gst||'—')+'</span></div><div><span class="ml">Bank / Branch</span><span class="mv">'+(CO.branch||'—')+'</span></div>'):'')+
     '</div>'+
@@ -1073,17 +1293,19 @@ function buildPrintReport(r,total,rate){
 }
 function currentRows(){
   const r=S.result,v=S.view;
-  const DA=x=>r.abs?Math.abs(x):x;
+  const dc=(b,e)=>sideLbl(b.side)+' → '+sideLbl(e.side); // Bank side → ERP side
   if(v==='matched')return r.matched.map(m=>({
     Reference:m.b.ref||m.e.ref,'Bank date':fdate(m.b.date),'ERP date':fdate(m.e.date),
-    'Bank amount':DA(m.b.amt),'ERP amount':DA(m.e.amt),'Matched via':m.via,Narration:m.b.narr||m.e.narr}));
+    'Dr/Cr (Bank → ERP)':dc(m.b,m.e),
+    'Bank amount':m.b.amt,'ERP amount':m.e.amt,'Matched via':m.via,Narration:m.b.narr||m.e.narr}));
   if(v==='mism')return r.mism.map(m=>({
-    Reference:m.b.ref||m.e.ref,'Bank date':fdate(m.b.date),'Bank amount':DA(m.b.amt),
-    'ERP amount':DA(m.e.amt),Difference:m.diff,Narration:m.b.narr||m.e.narr}));
+    Reference:m.b.ref||m.e.ref,'Bank date':fdate(m.b.date),'ERP date':fdate(m.e.date),
+    'Dr/Cr (Bank → ERP)':dc(m.b,m.e),
+    'Bank amount':m.b.amt,'ERP amount':m.e.amt,Difference:m.diff,Reason:m.via,Narration:m.b.narr||m.e.narr}));
   if(v==='bankOnly')return r.bankOnly.map(b=>({
-    Reference:b.ref,Date:fdate(b.date),Amount:DA(b.amt),Narration:b.narr}));
+    Reference:b.ref,Date:fdate(b.date),'Dr/Cr':sideLbl(b.side),Amount:b.amt,Narration:b.narr}));
   return r.erpOnly.map(e=>({
-    Reference:e.ref,Date:fdate(e.date),Amount:DA(e.amt),Narration:e.narr}));
+    Reference:e.ref,Date:fdate(e.date),'Dr/Cr':sideLbl(e.side),Amount:e.amt,Narration:e.narr}));
 }
 const NUMCOLS=new Set(['Bank amount','ERP amount','Amount','Difference']);
 function renderTable(){
@@ -1105,12 +1327,18 @@ function renderTable(){
     host.querySelector('.scroll').innerHTML=tableHtml(cols,filt);
     host.querySelector('.cnt').textContent=`${filt.length} rows`;};
 }
+function dcHtml(v){
+  if(!v||v==='—')return '<span class="dc na">—</span>';
+  return String(v).split('→').map(t=>{t=t.trim();const k=t.toLowerCase();
+    return '<span class="dc '+(k==='dr'?'dr':k==='cr'?'cr':'na')+'">'+t+'</span>';}).join('<span class="dcarr">→</span>');
+}
 function tableHtml(cols,rows){
   if(!rows.length)return `<div class="empty">Nothing in this category — 🎉</div>`;
   const head='<tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr>';
   const body=rows.map(r=>'<tr>'+cols.map(c=>{
     let v=r[c];
     if(NUMCOLS.has(c)){const cls=c==='Difference'?'num flag':'num';return `<td class="${cls}">${inr(v)}</td>`;}
+    if(c.indexOf('Dr/Cr')===0)return `<td>${dcHtml(v)}</td>`;
     if(c==='Reference')return `<td class="ref">${v||'—'}</td>`;
     return `<td>${v===''||v==null?'—':v}</td>`;
   }).join('')+'</tr>').join('');
@@ -1137,7 +1365,8 @@ document.getElementById('dlXlsx').onclick=()=>{
   const sum=[
     [CO.name||'BRIGHT PAPER'],[CO.addr||''],['Bank Reconciliation Report'],[],
     ['GST No.',CO.gst||'-'],['Bank / Branch',CO.branch||'-'],[],
-    ['Period',per],['Generated',new Date().toLocaleString('en-GB')],['Prepared by',by],[],
+    ['Period',per],['Generated',new Date().toLocaleString('en-GB')],['Prepared by',by],
+    ['Side rule',r.rule||'-'],['Skipped (other side)',skipTxt(r)||'none'],[],
     ['Category','Count','Amount (Rs.)','Share'],
     ['Matched',r.counts.matched,Math.round(r.totals.matched),rate+'%'],
     ['Amount mismatch',r.counts.mism,Math.round(r.totals.mism),''],
@@ -1188,7 +1417,7 @@ function savePresets(p){PRESETS=p;try{localStorage.setItem('br_presets',JSON.str
 var PRESETS=loadPresets();
 var APPLIED_PRESET='';
 function headerName(w,idx){var H=headersOf(S[w]);return idx>=0?(H[idx]||''):'';}
-function mapNames(w){var m=S[w].map;return {mode:m.mode,ref:headerName(w,m.ref),amt:headerName(w,m.amt),dr:headerName(w,m.dr),cr:headerName(w,m.cr),date:headerName(w,m.date),narr:headerName(w,m.narr)};}
+function mapNames(w){var m=S[w].map;return {mode:m.mode,ref:headerName(w,m.ref),amt:headerName(w,m.amt),dr:headerName(w,m.dr),cr:headerName(w,m.cr),drcr:headerName(w,m.drcr),date:headerName(w,m.date),narr:headerName(w,m.narr)};}
 function idxOf(w,name){if(!name)return -1;var H=headersOf(S[w]).map(function(x){return String(x).trim().toLowerCase();});return H.indexOf(String(name).trim().toLowerCase());}
 function setMappingUI(w,m){
   var mm=Object.assign({},S[w].map,m);S[w].map=mm;
@@ -1201,7 +1430,9 @@ function setMappingUI(w,m){
 }
 function applyPreset(P){
   ['bank','erp'].forEach(function(w){var src=P[w];if(!src)return;
-    setMappingUI(w,{mode:src.mode||'single',ref:idxOf(w,src.ref),amt:idxOf(w,src.amt),dr:idxOf(w,src.dr),cr:idxOf(w,src.cr),date:idxOf(w,src.date),narr:idxOf(w,src.narr)});});
+    setMappingUI(w,{mode:src.mode||'single',ref:idxOf(w,src.ref),amt:idxOf(w,src.amt),dr:idxOf(w,src.dr),cr:idxOf(w,src.cr),drcr:idxOf(w,src.drcr),date:idxOf(w,src.date),narr:idxOf(w,src.narr)});});
+  if(P.side&&(P.side.dr||P.side.cr)){S.sideDr=!!P.side.dr;S.sideCr=!!P.side.cr;saveSide();}
+  syncSideUI();
   validate();
 }
 function buildPresetBar(){
@@ -1216,8 +1447,8 @@ function buildPresetBar(){
   document.getElementById('presetDel').onclick=function(){var n=document.getElementById('presetSel').value;if(n&&confirm('Delete preset "'+n+'"?')){delete P[n];savePresets(P);buildPresetBar();}};
   document.getElementById('presetSave').onclick=function(){
     var n=prompt('Preset ka naam (jaise: HDFC Current A/c):');if(!n)return;
-    P[n]={bank:mapNames('bank'),erp:mapNames('erp')};savePresets(P);APPLIED_PRESET=n;buildPresetBar();
-    alert('Preset "'+n+'" save ho gaya. Agli baar Apply karke turant mapping aa jayegi.');
+    P[n]={bank:mapNames('bank'),erp:mapNames('erp'),side:{dr:S.sideDr,cr:S.sideCr}};savePresets(P);APPLIED_PRESET=n;buildPresetBar();
+    alert('Preset "'+n+'" save ho gaya (column mapping + Dr/Cr side). Agli baar Apply karke turant mapping aa jayegi.');
   };
 }
 
