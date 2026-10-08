@@ -403,8 +403,135 @@
   .sidenote{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);
     margin:-6px 0 16px;padding:9px 12px;background:#FBFAF7;border:1px dashed var(--line);border-radius:10px}
   .sidenote:empty{display:none}
+  .sidenote:has(#bothSidesBtn){border-style:solid;border-color:var(--bankonly);background:var(--bankonly-tint);color:var(--ink)}
   .kpi-v.rule{font-family:var(--sans);font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:5px;padding-top:5px}
   .kpi-v.rule .row{display:inline-flex;align-items:center}
+
+
+  /* ===== Action required — simple visual version ===== */
+  .todo-card{border:1px solid var(--line);background:#fff}
+  .ar-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:16px 20px 14px;border-bottom:1px solid var(--line-soft)}
+  .ar-eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
+  .ar-title{font-family:var(--disp);font-weight:600;font-size:22px;letter-spacing:-.02em;margin:4px 0 0;line-height:1.1}
+  .ar-progress{min-width:200px}
+  .arp-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:7px}
+  .arp-top b{color:var(--ink)}
+  .arp-bar{height:7px;border-radius:10px;background:#EFEDE7;overflow:hidden}
+  .arp-bar span{display:block;height:100%;border-radius:10px;background:var(--green);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+  .ar-body{padding:16px 20px 18px}
+
+  /* status */
+  .tstatus{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:14px;margin-bottom:14px}
+  .tstatus .ts-ic{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff}
+  .tstatus .ts-ic svg{width:21px;height:21px}
+  .tstatus .ts-big{font-family:var(--disp);font-weight:600;font-size:18px;letter-spacing:-.01em;line-height:1.15}
+  .tstatus .ts-sub{font-size:13px;color:var(--ink-soft);margin-top:2px;line-height:1.45}
+  .tstatus .ts-proj{margin-left:auto;flex:none;text-align:center;padding-left:16px;border-left:1px solid rgba(0,0,0,.07)}
+  .ts-proj .pl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+  .ts-proj .pv{display:inline-flex;align-items:center;gap:7px;margin-top:5px;padding:6px 12px;border-radius:30px;font-weight:700;font-size:12.5px}
+  .ts-proj .pv svg{width:13px;height:13px}
+  .ts-proj .pv.ok{background:var(--green);color:#fff} .ts-proj .pv.bad{background:var(--mismatch-tint);color:var(--mismatch)}
+  .tstatus.bad{background:#FFF5EE;border:1px solid #F2D6C2} .tstatus.bad .ts-ic{background:var(--brand)}
+  .tstatus.ok{background:var(--green-tint);border:1px solid #C9E2D1} .tstatus.ok .ts-ic{background:var(--green)}
+  @media(max-width:680px){.tstatus{flex-wrap:wrap}.tstatus .ts-proj{margin-left:0;padding-left:0;border-left:none;text-align:left;width:100%}}
+
+  /* totals */
+  .tallybox{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+  @media(max-width:760px){.tallybox{grid-template-columns:1fr}}
+  .tb{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#fff}
+  .tb-h{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+  .tb-ic{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex:none}
+  .tb-ic svg{width:15px;height:15px}
+  .tb-ic.out{background:var(--bankonly-tint);color:#9A5E00} .tb-ic.in{background:var(--green-tint);color:var(--green-dark)}
+  .tb-t{font-family:var(--disp);font-weight:600;font-size:15px;line-height:1.1} .tb-s{font-size:11px;color:var(--ink-soft)}
+  .tb-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+  .tb-side{background:#FAF8F4;border-radius:10px;padding:7px 10px;text-align:center}
+  .tb-side .k{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+  .tb-side .v{font-family:var(--disp);font-weight:600;font-size:15px;margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tb-side .n{font-size:10.5px;color:var(--ink-soft);margin-top:1px}
+  .tb-eq{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700}
+  .tb-eq.ok{background:var(--green-tint);color:var(--green)} .tb-eq.bad{background:var(--mismatch-tint);color:var(--mismatch)}
+  .tb-res{margin-top:9px;padding:7px 10px;border-radius:9px;font-size:12.5px;font-weight:600;line-height:1.45}
+  .tb-res.ok{background:var(--green-tint);color:var(--green-dark)} .tb-res.bad{background:var(--mismatch-tint);color:#9C2A1F}
+  .tb-after{margin-top:6px;font-size:11.5px;font-weight:600;color:var(--green-dark);display:flex;align-items:center;gap:6px}
+  .tb-after.no{color:var(--ink-soft)}
+
+  /* list */
+  .ar-listh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 2px 10px}
+  .ar-listh .t{font-family:var(--disp);font-weight:600;font-size:16px}
+  .ar-listh .h{font-size:11.5px;color:var(--ink-soft)}
+  .todo{--k:var(--brand);--kt:var(--brand-tint);border:1px solid var(--line);border-radius:14px;margin-bottom:12px;background:#fff;
+    overflow:hidden;box-shadow:var(--sh-sm);transition:box-shadow .2s,opacity .3s}
+  .todo:hover{box-shadow:var(--sh)}
+  .todo.k-typo,.todo.k-amt{--k:var(--mismatch);--kt:var(--mismatch-tint)}
+  .todo.k-dup,.todo.k-side{--k:var(--erponly);--kt:var(--erponly-tint)}
+  .todo.k-bankOnly{--k:var(--bankonly);--kt:var(--bankonly-tint)}
+  .todo-top{display:flex;align-items:center;gap:11px;padding:10px 14px;border-bottom:1px solid var(--line-soft);background:linear-gradient(90deg,var(--kt),#fff 60%)}
+  .todo .tn{flex:none;width:28px;height:28px;border-radius:50%;background:var(--k);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center}
+  .todo .tttl{flex:1;min-width:0}
+  .todo .pill{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:30px;background:#fff;color:var(--k);border:1px solid var(--kt)}
+  .todo .tt{font-family:var(--disp);font-weight:600;font-size:15.5px;letter-spacing:-.01em;line-height:1.25;margin-top:2px}
+  .todo .ta{text-align:right;flex:none}
+  .todo .ta .av{font-family:var(--disp);font-weight:600;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .todo .ta .ad{font-size:11px;color:var(--ink-soft)}
+  .todo-b{padding:12px 14px 13px}
+
+  /* Bank vs ERP picture */
+  .vs{display:grid;grid-template-columns:1fr 34px 1fr;align-items:stretch;gap:0;margin-bottom:10px}
+  .vs-col{border:1px solid var(--line);border-radius:11px;padding:8px;background:#FCFBF9;display:flex;flex-direction:column;gap:7px}
+  .vs-h{display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);padding:0 3px 1px}
+  .vs-h .dot{width:9px;height:9px;border-radius:50%}
+  .vs-mid{display:grid;place-items:center}
+  .vs-mid span{width:24px;height:24px;border-radius:50%;background:var(--mismatch);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center;box-shadow:0 4px 12px rgba(206,59,44,.3)}
+  .ent{border-radius:9px;padding:6px 9px;background:#fff;border:1px solid var(--line);position:relative}
+  .ent .r1{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .ent .d{font-size:11px;font-weight:600;color:var(--ink-soft)}
+  .ent .m{font-family:var(--mono);font-weight:700;font-size:13px;white-space:nowrap}
+  .ent .nar{font-size:11.5px;color:var(--ink);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ent .dir{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:20px;margin-top:3px}
+  .ent .dir.out{background:var(--bankonly-tint);color:#9A5E00} .ent .dir.in{background:var(--green-tint);color:var(--green-dark)}
+  .ent.ok{border-color:#CFE5D6} .ent.ok::after{content:"✓";position:absolute;top:-7px;right:-7px;width:16px;height:16px;border-radius:50%;background:var(--green);color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center}
+  .ent.bad{border:1.5px solid var(--mismatch);background:#FFF7F5}
+  .ent.bad .tag{position:absolute;top:-8px;left:8px;background:var(--mismatch);color:#fff;font-size:8.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:20px}
+  .ent.bad .m.x{color:var(--mismatch)}
+  .ent.bad .m.x s{opacity:.85}
+  .ent.miss{border:1.5px dashed #D3CCC0;background:repeating-linear-gradient(135deg,#FAF8F4 0 10px,#F4F1EB 10px 20px);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:54px;color:var(--ink-soft);font-weight:700;font-size:11.5px;text-align:center;gap:2px}
+  .ent.miss .big{font-size:15px;color:#C2B9AB;line-height:1}
+  @media(max-width:640px){.vs{grid-template-columns:1fr}.vs-mid{padding:8px 0}}
+
+  .hg{font-family:var(--sans);font-weight:500;color:#8A7E70;font-size:.86em;letter-spacing:0;text-transform:none}
+  .ts-big .hg{font-size:.62em;margin-left:6px;font-weight:600;color:#B0703F}
+  .tb-res .hg{color:inherit;opacity:.75;font-weight:500}
+  .tb-after .hg{color:var(--green-dark);opacity:.75;font-weight:500}
+  .ar-listh .t .hg{font-size:.72em}
+  .todo .tth{font-size:12.5px;color:#8A7E70;font-weight:500;margin-top:1px}
+  .expl{display:grid;grid-template-columns:1fr;gap:7px}
+  .ex{border-radius:10px;padding:8px 11px;display:grid;grid-template-columns:132px 1fr 1fr;gap:12px;align-items:start}
+  .ex .exl{display:grid;grid-template-columns:auto 1fr;column-gap:6px;row-gap:0;align-items:center;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding-top:1px}
+  .ex .exl svg{width:15px;height:15px;grid-row:1/3}
+  .ex .exl .lh{font-weight:600;letter-spacing:.02em;text-transform:none;font-size:11px;opacity:.75}
+  .ex .exen{font-size:12.5px;font-weight:600;line-height:1.45;color:var(--ink)}
+  .ex .exhi{font-size:12.5px;font-weight:500;line-height:1.45;color:#6E6255;padding-left:12px;border-left:2px solid rgba(0,0,0,.08)}
+  .ex.what{background:#F7F5F1} .ex.what .exl{color:var(--ink-soft)}
+  .ex.do{background:var(--green-tint)} .ex.do .exl{color:var(--green-dark)} .ex.do .exhi{color:#2F5E41;border-left-color:rgba(32,112,64,.22)}
+  @media(max-width:760px){.ex{grid-template-columns:1fr}.ex .exl{grid-template-columns:auto auto 1fr}.ex .exl svg{grid-row:auto}.ex .exhi{padding-left:0;border-left:none;padding-top:5px;border-top:1px dashed rgba(0,0,0,.1)}}
+  .todo-f{display:flex;justify-content:flex-end;margin-top:14px}
+  .donebtn{flex:none;display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:11.5px;font-weight:600;cursor:pointer;
+    padding:6px 11px;border-radius:30px;border:1.5px solid var(--line);background:#fff;color:var(--ink);transition:.15s}
+  .donebtn:hover{border-color:var(--green);color:var(--green)}
+  .donebtn .bx{width:14px;height:14px;border-radius:4px;border:1.5px solid #C9C2B6;display:grid;place-items:center;font-size:12px;color:#fff}
+  .todo.done{opacity:.6}
+  .todo.done .tn{background:var(--green)}
+  .todo.done .tt{text-decoration:line-through;text-decoration-color:#9AA79E}
+  .todo.done .donebtn{border-color:var(--green);color:var(--green);background:var(--green-tint)}
+  .todo.done .donebtn .bx{background:var(--green);border-color:var(--green)}
+  @media(max-width:560px){.todo-top{flex-wrap:wrap}.todo .ta{margin-left:auto}.todo .donebtn{width:100%;justify-content:center}}
+  .pr-todo{border:1px solid #ece7de;border-left:4px solid var(--brand);border-radius:8px;padding:7px 10px;margin-bottom:6px;font-size:11px;page-break-inside:avoid}
+  .pr-todo b{font-size:11.5px}
+  .pr-todo .hi2{color:#7A6F62}
+  .pr-todo .d{color:#185A33;font-weight:600;margin-top:2px}
+  .pr-todo .hi2{color:#7A6F62;font-weight:500}
 
   /* presets + misc */
   .presetbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:16px;
@@ -593,6 +720,21 @@
 
   <!-- RESULTS -->
   <section id="results">
+    <div class="card todo-card" id="todoCard">
+      <div class="ar-head">
+        <div>
+          <div class="ar-eyebrow">Reconciliation review</div>
+          <h2 class="ar-title">Action required</h2>
+        </div>
+        <div class="ar-progress" id="arProgress"></div>
+      </div>
+      <div class="card-b ar-body">
+        <div id="todoStatus"></div>
+        <div class="tallybox" id="tallyBox"></div>
+        <div class="ar-listh" id="todoListH"></div>
+        <div id="todoList"></div>
+      </div>
+    </div>
     <div class="card">
       <div class="card-h"><h2 style="font-family:var(--disp)">Result</h2>
         <span class="hint" id="matchRate"></span></div>
@@ -631,9 +773,9 @@ if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc=
 /* ---------- state ---------- */
 /* sideDr / sideCr = bank side pe kaunsi side tick hai. ERP side hamesha iska ulta (mirror):
    Bank Debit ↔ ERP Credit, Bank Credit ↔ ERP Debit.  Last choice browser me yaad rehti hai. */
-const S={bank:null,erp:null,result:null,view:'matched',sideDr:true,sideCr:false};
-(function(){try{var x=JSON.parse(localStorage.getItem('br_side')||'null');if(x&&(x.dr||x.cr)){S.sideDr=!!x.dr;S.sideCr=!!x.cr;}}catch(e){}})();
-function saveSide(){try{localStorage.setItem('br_side',JSON.stringify({dr:S.sideDr,cr:S.sideCr}));}catch(e){}}
+const S={bank:null,erp:null,result:null,view:'matched',sideDr:true,sideCr:true}; // default: poora mahina (dono side)
+(function(){try{var x=JSON.parse(localStorage.getItem('br_side_v2')||'null');if(x&&(x.dr||x.cr)){S.sideDr=!!x.dr;S.sideCr=!!x.cr;}}catch(e){}})();
+function saveSide(){try{localStorage.setItem('br_side_v2',JSON.stringify({dr:S.sideDr,cr:S.sideCr}));}catch(e){}}
 const G={ // header-name guesses
   ref:['utr','rrn','ref','reference','chq','cheque','cheque no','chequeno','instrument','txn id','transaction id','tran id','vch no','vch no.','voucher no','doc.no.','doc.no','doc no','doc. no.','document no'],
   amt:['amount','amt','txn amount','transaction amount','value'],
@@ -953,7 +1095,7 @@ function sideHtml(w){
   const isBank=w==='bank';
   return `
       <div class="field sidefield">
-        <label>${isBank?'Kaunsi side match karni hai?':'ERP side'} <span class="desc">${isBank?'— tick karo; ERP side apne aap ulti (mirror) set hogi':'— auto, bank ke opposite &#128274;'}</span></label>
+        <label>${isBank?'Kaunsi side match karni hai?':'ERP side'} <span class="desc">${isBank?'— dono tick = poora mahina (recommended); ERP side apne aap ulti set hogi':'— auto, bank ke opposite &#128274;'}</span></label>
         <div class="sidepick${isBank?'':' locked'}" data-w="${w}">
           <label class="sidebox" data-side="dr"><input type="checkbox" data-w="${w}" data-side="dr"${isBank?'':' disabled'}/>
             <span><span class="sb-t">Debit (Dr)</span><span class="sb-s">${isBank?'withdrawal / payment':'bank Credit ke saamne'}</span></span></label>
@@ -1174,7 +1316,7 @@ function reconcile(){
   const matched=[],mism=[];
   // ek hi ref 4+ rows me (ONLINE / RTGS / NEFT jaise labels) → wo reference nahi, usse match mat karo
   const freq=new Map();bank.concat(erp).forEach(x=>{if(x.nref)freq.set(x.nref,(freq.get(x.nref)||0)+1);});
-  bank.concat(erp).forEach(x=>{if(x.nref&&freq.get(x.nref)>=4)x.nref='';});
+  bank.concat(erp).forEach(x=>{if(x.nref&&freq.get(x.nref)>=4){x.nref='';x.ref='';}});
   // index ERP by normalized ref
   const erpByRef=new Map();
   erp.forEach(e=>{if(e.nref){if(!erpByRef.has(e.nref))erpByRef.set(e.nref,[]);erpByRef.get(e.nref).push(e);}});
@@ -1255,9 +1397,14 @@ function reconcile(){
 
   const bankOnly=bank.filter(b=>!b.used);
   const erpOnly=erp.filter(e=>!e.used);
+  const issues=diagnose({matched,mism,bankOnly,erpOnly,tol,win,sideOk,dayDiff,amtEq});
+  // control totals: payments = Bank Debit vs ERP Credit, receipts = Bank Credit vs ERP Debit
+  const tsum=(l,sd)=>sum(l.filter(x=>x.side===sd).map(x=>x.amt));
+  const tally={pay:{bank:tsum(bankAll,'dr'),erp:tsum(erpAll,'cr'),nb:bankAll.filter(x=>x.side==='dr').length,ne:erpAll.filter(x=>x.side==='cr').length},
+               rec:{bank:tsum(bankAll,'cr'),erp:tsum(erpAll,'dr'),nb:bankAll.filter(x=>x.side==='cr').length,ne:erpAll.filter(x=>x.side==='dr').length}};
   const allDates=bank.concat(erp).map(x=>x.date).filter(d=>d&&!isNaN(d));
   const period=allDates.length?{from:new Date(Math.min.apply(null,allDates)),to:new Date(Math.max.apply(null,allDates))}:null;
-  S.result={matched,mism,bankOnly,erpOnly,period,skipped,
+  S.result={matched,mism,bankOnly,erpOnly,period,skipped,issues,tally,
     side:{dr:sideDr,cr:sideCr},rule:sideRuleText(),ruleShort:sideRuleText(true),
     counts:{matched:matched.length,mism:mism.length,bankOnly:bankOnly.length,erpOnly:erpOnly.length},
     totals:{
@@ -1267,6 +1414,100 @@ function reconcile(){
       erpOnly:sum(erpOnly.map(e=>e.amt))
     }};
   renderResults();
+}
+/* ---------- diagnosis: har fark ko aasaan bhasha me "kya hua / kya karna hai" ----------
+   - Amount galat likha: bank-only + ERP-only, same date (window), ulti side, amount me zero/digit ki galti
+   - Duplicate: ERP-only (ya bank-only) jiske jaisi entry (same amount, side, ±1 din) pehle se match ho chuki hai
+   - Baaki: entry ek hi taraf hai → kis taraf sudhaarna hai wo batao                                  */
+function amtTypo(a,b){
+  const sa=String(Math.round(a)),sb=String(Math.round(b));
+  if(Math.abs(a-b)<0.01||sa===sb)return '';
+  const A=Math.round(a*100),B=Math.round(b*100);
+  if(A===B*10||B===A*10||A===B*100||B===A*100)return 'zero';
+  if(sa.length===sb.length){const d=[];for(let i=0;i<sa.length;i++)if(sa[i]!==sb[i])d.push(i);
+    if(d.length===1)return 'digit';
+    if(d.length===2&&d[1]===d[0]+1&&sa[d[0]]===sb[d[1]]&&sa[d[1]]===sb[d[0]])return 'swap';}
+  if(Math.abs(sa.length-sb.length)===1){const L=sa.length>sb.length?sa:sb,Sm=sa.length>sb.length?sb:sa;
+    for(let i=0;i<L.length;i++)if(L.slice(0,i)+L.slice(i+1)===Sm)return 'digitcount';}
+  return '';
+}
+function diagnose(c){
+  const out=[],usedB=new Set(),usedE=new Set();
+  const MIR={dr:'cr',cr:'dr'};
+  const imp=(side,amt)=>side?[{side,amt}]:[];          // ERP total ka badlav agar fix kar diya
+  const L=x=>inr(x).replace('.00','');                   // short amount for sentences
+  const TY={zero:['a zero is missing or extra','ek zero kam/zyada lag gaya'],digit:['one digit is wrong','ek ank galat hai'],swap:['two digits are swapped','do ank aage-peeche ho gaye'],digitcount:['a digit is missing or extra','ek ank chhoot gaya / zyada lag gaya']};
+  // cmp: kis taraf kaunsi entry dikhani hai. state ok = sahi, bad = galat, miss = gayab
+  // a) amount galat likha (bank-only + ERP-only pair)
+  c.bankOnly.forEach(b=>{
+    let best=null,bg=1e9,bk='';
+    c.erpOnly.forEach(e=>{if(usedE.has(e)||!c.sideOk(b,e))return;const g=c.dayDiff(b.date,e.date);if(g>c.win)return;
+      const k=amtTypo(b.amt,e.amt);if(k&&g<bg){best=e;bg=g;bk=k;}});
+    if(best){usedB.add(b);usedE.add(best);
+      out.push({kind:'typo',label:'Wrong amount',where:'erp',title:'Wrong amount entered in ERP',titleHi:'ERP me amount galat likha',date:b.date,amt:b.amt,
+        what:`The bank shows ${L(b.amt)}, but ERP shows ${L(best.amt)} — ${TY[bk][0]}.`,
+        whatHi:`Bank me ${L(b.amt)} hai, par ERP me ${L(best.amt)} likha hai (${TY[bk][1]}).`,
+        todo:`Change the amount in ERP from ${L(best.amt)} to ${L(b.amt)}.`,
+        todoHi:`ERP me amount ${L(best.amt)} se badal ke ${L(b.amt)} karo.`,
+        
+        cmp:{bank:[{x:b,st:'ok'}],erp:[{x:best,st:'bad',amtBad:true,tag:'Wrong amount'}]},
+        impact:imp(best.side,b.amt-best.amt),b,e:best});}
+  });
+  // b) duplicate
+  const dupOf=(x,key)=>{let best=null,bg=9;c.matched.forEach(m=>{const y=m[key];if(!y||y._parts||y.side!==x.side||!c.amtEq(y.amt,x.amt))return;
+    const g=c.dayDiff(y.date,x.date)+(m.via==='Amount+Date'?0:0.01);if(g<=1&&g<bg){bg=g;best=m;}});return best;}; // sabse paas wali date ki entry
+  c.erpOnly.forEach(e=>{if(usedE.has(e))return;const m=dupOf(e,'e');if(!m)return;usedE.add(e);
+    out.push({kind:'dup',label:'Entered twice',where:'erp',title:'Same entry entered twice in ERP',titleHi:'ERP me entry do baar lagi hai',date:e.date,amt:e.amt,
+      what:'ERP has this entry two times, but the bank has it only once.',
+      whatHi:'ERP me ye entry do baar hai, bank me sirf ek baar.',
+      todo:'Delete the extra (second) entry from ERP.',
+      todoHi:'ERP me se extra (doosri) entry delete karo.',
+      cmp:{bank:[{x:m.b,st:'ok'}],erp:[{x:m.e,st:'ok'},{x:e,st:'bad',tag:'Extra copy'}]},
+      impact:imp(e.side,-e.amt),e});});
+  c.bankOnly.forEach(b=>{if(usedB.has(b))return;const m=dupOf(b,'b');if(!m)return;usedB.add(b);
+    out.push({kind:'dup',label:'Twice in bank',where:'bank',title:'Same amount appears twice in the bank',titleHi:'Bank me amount do baar hai',date:b.date,amt:b.amt,
+      what:'The bank shows this amount two times, but ERP has it only once.',
+      whatHi:'Bank me ye amount do baar hai, ERP me ek hi baar.',
+      todo:'Ask the bank. If both are correct, add the second entry in ERP.',
+      todoHi:'Bank se poochho. Dono sahi hain to ERP me doosri entry karo.',
+      cmp:{bank:[{x:m.b,st:'ok'},{x:b,st:'bad',tag:'Second time'}],erp:[{x:m.e,st:'ok'}]},
+      impact:imp(MIR[b.side],b.amt),b});});
+  // c) same ref: amount alag / side ulti
+  c.mism.forEach(m=>{
+    if(/side/.test(m.via))out.push({kind:'side',label:'Wrong side',where:'erp',title:'Entry is on the wrong side in ERP',titleHi:'ERP me entry ulti side me lagi hai',date:m.b.date,amt:m.b.amt,
+      what:`The bank shows money ${m.b.side==='dr'?'going out':'coming in'}, but ERP shows money ${m.e.side==='cr'?'going out':'coming in'}.`,
+      whatHi:`Bank me paisa ${m.b.side==='dr'?'gaya':'aaya'} hai, par ERP me paisa ${m.e.side==='cr'?'gaya':'aaya'} dikhaya hai (Debit/Credit ulta).`,
+      todo:`Move this ERP entry to the ${m.e.side==='dr'?'Credit':'Debit'} side.`,
+      todoHi:`ERP me is entry ko ${m.e.side==='dr'?'Credit':'Debit'} side me karo.`,
+      cmp:{bank:[{x:m.b,st:'ok'}],erp:[{x:m.e,st:'bad',tag:'Wrong side'}]},
+      impact:imp(m.e.side,-m.e.amt).concat(imp(MIR[m.e.side],m.e.amt)),b:m.b,e:m.e});
+    else out.push({kind:'amt',label:'Amount differs',where:'erp',title:'Same cheque / UTR, different amount',titleHi:'Cheque/UTR same, amount alag',date:m.b.date,amt:m.b.amt,
+      what:`Same reference ${m.b.ref||m.e.ref}, but the bank shows ${L(m.b.amt)} and ERP shows ${L(m.e.amt)}.`,
+      whatHi:`Cheque/UTR same hai, par bank me ${L(m.b.amt)} aur ERP me ${L(m.e.amt)} hai.`,
+      todo:`Correct the ERP amount to ${L(m.b.amt)}.`,
+      todoHi:`ERP me amount ${L(m.b.amt)} karo.`,
+      cmp:{bank:[{x:m.b,st:'ok'}],erp:[{x:m.e,st:'bad',amtBad:true,tag:'Wrong amount'}]},
+      impact:imp(m.e.side,m.b.amt-m.e.amt),b:m.b,e:m.e});
+  });
+  // d) sirf ek taraf
+  c.erpOnly.forEach(e=>{if(usedE.has(e))return;const pay=e.side==='cr';
+    out.push({kind:'erpOnly',label:'Not in bank',where:'erp',title:pay?'Payment in ERP, but not in bank':'Receipt in ERP, but not in bank',titleHi:pay?'ERP me payment dikhaya, bank se paisa gaya hi nahi':'ERP me paisa aaya dikhaya, bank me aaya hi nahi',date:e.date,amt:e.amt,
+      whatHi:pay?'ERP me ye payment likha hai, par bank statement me ye nahi hai.':'ERP me ye receipt hai, par bank me paisa aaya hi nahi.',
+      todoHi:pay?'Check karo: cheque abhi bank me pass nahi hua? Payment hua hi nahi to ERP se ye entry hatao.':'Check karo: cheque clear hua ya bounce hua? Entry galat hai to ERP se hatao.',
+      what:pay?'ERP shows this payment, but the money never left the bank.':'ERP shows this money received, but it never came into the bank.',
+      todo:pay?'Check if the cheque has not cleared yet. If no payment was made, delete this entry from ERP.':'Check if the cheque has not cleared or has bounced. If the entry is wrong, delete it from ERP.',
+      cmp:{bank:[{miss:'Not found in bank statement'}],erp:[{x:e,st:'bad',tag:'Only in ERP'}]},
+      impact:imp(e.side,-e.amt),e});});
+  c.bankOnly.forEach(b=>{if(usedB.has(b))return;const rec=b.side==='cr';
+    out.push({kind:'bankOnly',label:'Not in ERP',where:'erp',title:rec?'Money received in bank, not entered in ERP':'Money paid from bank, not entered in ERP',titleHi:rec?'Bank me paisa aaya, ERP me entry nahi hai':'Bank se paisa kata, ERP me entry nahi hai',
+      whatHi:rec?'Bank me paisa aaya hai, par ERP me iski entry nahi mili.':'Bank se paisa kata hai, par ERP me iski entry nahi mili.',
+      todoHi:rec?'ERP me ye receipt entry karo (kisne bheja — narration dekho).':'ERP me ye payment / bank charge entry karo.',date:b.date,amt:b.amt,
+      what:rec?'Money came into the bank, but this entry is not in ERP.':'Money went out of the bank, but this entry is not in ERP.',
+      todo:rec?'Add this receipt in ERP (the bank narration shows who paid).':'Add this payment or bank charge in ERP.',
+      cmp:{bank:[{x:b,st:'bad',tag:'Only in bank'}],erp:[{miss:'Not found in ERP'}]},
+      impact:imp(MIR[b.side],b.amt),b});});
+  out.sort((p,q)=>(p.date||0)-(q.date||0));
+  return out;
 }
 /* subset (2–6 items) jiska sum target ke tol ke andar ho; indexes lautata hai */
 function subsetSum(amts,target,tol){
@@ -1303,11 +1544,15 @@ function renderResults(){
   document.getElementById('results').style.display='block';
   document.getElementById('t3').innerHTML='<b>3</b> Reconcile';
   const rate=total?Math.round(r.counts.matched/total*100):0;
-  document.getElementById('matchRate').textContent=`${r.ruleShort} · ${r.counts.matched} of ${total} lines matched · ${rate}% clean`;
+  document.getElementById('matchRate').textContent=`${r.ruleShort} · ${r.counts.matched} of ${total} lines matched · ${rate}% clean`+((r.side.dr&&r.side.cr)?'':' (sirf ek side)');
   const st=skipTxt(r);
+  const one=!(r.side.dr&&r.side.cr);
   document.getElementById('sideNote').innerHTML=st
-    ?'<b>Side filter:</b> '+st+' rows skip hui (dusri side &mdash; is run me reconcile nahi hui). Dono side chahiye to Step 2 me Debit aur Credit dono tick karo.'
+    ?'<span>&#9888;&#65039; <b>Sirf '+(r.side.dr?'Debit':'Credit')+' side reconcile hui.</b> '+st+' rows check hi nahi hui &mdash; unki galtiyan yahan nahi dikhengi.</span>'+
+      (one?'<button class="pb-btn pri" id="bothSidesBtn" style="margin-left:auto">&#8634; Dono side ke saath dobara chalao</button>':'')
     :'';
+  const bb=document.getElementById('bothSidesBtn');
+  if(bb)bb.onclick=()=>{S.sideDr=true;S.sideCr=true;saveSide();syncSideUI();validate();if(!document.getElementById('runBtn').disabled)reconcile();};
   // seg bar
   const seg=document.getElementById('segbar');seg.innerHTML='';
   ['matched','mism','bankOnly','erpOnly'].forEach(k=>{
@@ -1327,6 +1572,7 @@ function renderResults(){
     c.onclick=()=>{S.view=k;renderTable();document.querySelectorAll('.stat').forEach(x=>x.classList.remove('active'));c.classList.add('active');};
     host.appendChild(c);
   });
+  renderTodo(r);
   buildHero(r,total,rate);
   animateCounts();
   buildPrintReport(r,total,rate);
@@ -1334,6 +1580,88 @@ function renderResults(){
   document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
 }
 const HEX={matched:'#207040',mism:'#CE3B2C',bankOnly:'#DA8A05',erpOnly:'#5A4CE6'};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+const ICON={
+  warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',
+  ok:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>',
+  in:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7 7 17M16 17H7V8"/></svg>',
+  act:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg>'
+};
+function tallyRows(r){
+  const out=[];
+  if(r.side.dr)out.push({k:'pay',side:'cr',lbl:'Money out',sub:'Payments',subHi:'paisa gaya',...r.tally.pay});
+  if(r.side.cr)out.push({k:'rec',side:'dr',lbl:'Money in',sub:'Receipts',subHi:'paisa aaya',...r.tally.rec});
+  return out;
+}
+function projected(r){const p={cr:r.tally.pay.erp,dr:r.tally.rec.erp};r.issues.forEach(it=>(it.impact||[]).forEach(x=>{p[x.side]+=x.amt;}));return p;}
+function entHtml(o,isBank){
+  if(o.miss)return `<div class="ent miss"><span class="big">&#10005;</span>${esc(o.miss)}</div>`;
+  const x=o.x,out=isBank?x.side==='dr':x.side==='cr',txt=(x.narr||x.ref||'').replace(/\s+/g,' ');
+  return `<div class="ent ${o.st}">${o.tag?`<span class="tag">${esc(o.tag)}</span>`:''}
+    <div class="r1"><span class="d">${fdate(x.date)}</span><span class="m${o.amtBad?' x':''}">${o.amtBad?'<s>'+inr(x.amt)+'</s>':inr(x.amt)}</span></div>
+    <div class="nar" title="${esc(txt)}">${esc(txt||'—')}</div>
+    ${x.side?`<span class="dir ${out?'out':'in'}">${out?'&#8599; Money out':'&#8601; Money in'}</span>`:''}</div>`;
+}
+function renderTodo(r){
+  const n=r.issues.length,half=!(r.side.dr&&r.side.cr);
+  if(!S.done||S.doneFor!==r)S.done=new Set(),S.doneFor=r;
+  const P=projected(r),rows=tallyRows(r),projOk=rows.every(t=>Math.abs(P[t.side]-t.bank)<0.5);
+  const halfNote=half?' Only one side (money in or money out) was checked in this run.':'';
+  document.getElementById('todoStatus').innerHTML=n
+    ?`<div class="tstatus bad"><div class="ts-ic">${ICON.warn}</div>
+       <div><div class="ts-big">${n} problem${n>1?'s':''} found <span class="hg">${n} jagah galti mili</span></div>
+       <div class="ts-sub">Fix the ${n>1?n+' items':'item'} below and the bank and ERP will match.${halfNote} <span class="hg">Neeche ke ${n} kaam karo, phir Bank aur ERP poora match ho jayega.</span></div></div>
+       <div class="ts-proj"><div class="pl">After fixing</div>
+       <div class="pv ${projOk?'ok':'bad'}">${projOk?ICON.ok+' Fully matched':'Still not matched'}</div></div></div>`
+    :`<div class="tstatus ok"><div class="ts-ic">${ICON.ok}</div>
+       <div><div class="ts-big">Everything matches <span class="hg">Sab tally hai</span></div>
+       <div class="ts-sub">Every bank entry is in ERP and every ERP entry is in the bank.${halfNote} <span class="hg">Koi kaam baaki nahi.</span></div></div></div>`;
+  document.getElementById('tallyBox').innerHTML=rows.map(t=>{
+    const d=t.erp-t.bank,ok=Math.abs(d)<0.5,pok=Math.abs(P[t.side]-t.bank)<0.5;
+    const more=d>0?'ERP':'Bank';
+    return `<div class="tb">
+      <div class="tb-h"><div class="tb-ic ${t.k==='pay'?'out':'in'}">${t.k==='pay'?ICON.out:ICON.in}</div>
+        <div><div class="tb-t">${t.lbl}</div><div class="tb-s">${t.sub} <span class="hg">· ${t.subHi}</span></div></div></div>
+      <div class="tb-vs">
+        <div class="tb-side"><div class="k">Bank</div><div class="v">${inr(t.bank)}</div><div class="n">${t.nb} entries</div></div>
+        <div class="tb-eq ${ok?'ok':'bad'}">${ok?'=':'&ne;'}</div>
+        <div class="tb-side"><div class="k">ERP</div><div class="v">${inr(t.erp)}</div><div class="n">${t.ne} entries</div></div>
+      </div>
+      <div class="tb-res ${ok?'ok':'bad'}">${ok?'&#10003; Bank and ERP match <span class="hg">· Dono barabar hain</span>':`Difference: ${inr(Math.abs(d))} — ${more} has more <span class="hg">· ${more} me ${inr(Math.abs(d))} zyada</span>`}</div>
+      ${ok?'':`<div class="tb-after ${pok?'':'no'}">${pok?'&#10003; Will match after the fixes below <span class="hg">· neeche ke kaam ke baad match ho jayega</span>':'Some difference will remain after the fixes'}</div>`}
+    </div>`;}).join('');
+  document.getElementById('todoListH').innerHTML=n?`<span class="t">Problems to fix <span class="hg">· Kya theek karna hai</span></span><span class="h">Tick “Mark as fixed” after correcting each one</span>`:'';
+  document.getElementById('todoList').innerHTML=r.issues.map((it,i)=>`
+    <div class="todo k-${it.kind}${S.done.has(i)?' done':''}" data-i="${i}">
+      <div class="todo-top">
+        <div class="tn">${i+1}</div>
+        <div class="tttl"><span class="pill">${esc(it.label)}</span><div class="tt">${esc(it.title)}</div><div class="tth">${esc(it.titleHi||'')}</div></div>
+        <div class="ta"><div class="av">${inr(it.amt)}</div><div class="ad">${fdate(it.date)}</div></div>
+        <button class="donebtn" data-i="${i}" title="Mark as fixed"><span class="bx">&#10003;</span><span class="lb">${S.done.has(i)?'Fixed':'Mark as fixed'}</span></button>
+      </div>
+      <div class="todo-b">
+        <div class="vs">
+          <div class="vs-col"><div class="vs-h"><span class="dot" style="background:#9A8F80"></span>Bank statement</div>${it.cmp.bank.map(o=>entHtml(o,true)).join('')}</div>
+          <div class="vs-mid"><span>&ne;</span></div>
+          <div class="vs-col"><div class="vs-h"><span class="dot" style="background:var(--brand)"></span>ERP ledger</div>${it.cmp.erp.map(o=>entHtml(o,false)).join('')}</div>
+        </div>
+        <div class="expl">
+          <div class="ex what"><div class="exl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>What happened</span><span class="lh">Kya hua</span></div>
+            <div class="exen">${esc(it.what)}</div><div class="exhi">${esc(it.whatHi||'')}</div></div>
+          <div class="ex do"><div class="exl">${ICON.act}<span>What to do</span><span class="lh">Kya karna hai</span></div>
+            <div class="exen">${esc(it.todo)}</div><div class="exhi">${esc(it.todoHi||'')}</div></div>
+        </div>
+      </div>
+    </div>`).join('');
+  const prog=()=>{const k=S.done.size;document.getElementById('arProgress').innerHTML=n
+    ?`<div class="arp-top"><span>Progress</span><b>${k} of ${n} fixed</b></div><div class="arp-bar"><span style="width:${(k/n*100).toFixed(1)}%"></span></div>`:'';};
+  prog();
+  document.querySelectorAll('#todoList .donebtn').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i,card=b.closest('.todo');
+    if(S.done.has(i))S.done.delete(i);else S.done.add(i);
+    card.classList.toggle('done',S.done.has(i));b.querySelector('.lb').textContent=S.done.has(i)?'Fixed':'Mark as fixed';prog();});
+}
 function animateCounts(){
   document.querySelectorAll('#statCards .num').forEach(el=>{
     const t=+el.dataset.t||0,dur=650,s0=performance.now();
@@ -1416,6 +1744,7 @@ function buildPrintReport(r,total,rate){
     '</div>'+
     '<div class="pr-sec-h main">Summary of reconciliation</div>'+
     '<table class="pr-tbl pr-summary"><thead><tr><th>Category</th><th class="r">Count</th><th class="r">Amount</th><th class="r">Share</th></tr></thead><tbody>'+sumRows+totalRow+'</tbody></table>'+
+    (r.issues.length?('<div class="pr-sec-h main">Action required ('+r.issues.length+')</div>'+r.issues.map(function(it,i){return '<div class="pr-todo"><b>'+(i+1)+'. '+esc(it.title)+'</b> — '+inr(it.amt)+', '+fdate(it.date)+'<div>'+esc(it.what)+' <span class="hi2">/ '+esc(it.whatHi||'')+'</span></div><div class="d">What to do: '+esc(it.todo)+' <span class="hi2">/ '+esc(it.todoHi||'')+'</span></div></div>';}).join('')):'<div class="pr-sec-h main">&#9989; Fully reconciled — no action required</div>')+
     sec('Amount mismatch','action required — verify entries',HEX.mism,viewRowsFor('mism'))+
     sec('Bank only','not recorded in ERP',HEX.bankOnly,viewRowsFor('bankOnly'))+
     sec('ERP only','pending / not yet cleared in bank',HEX.erpOnly,viewRowsFor('erpOnly'))+
@@ -1504,17 +1833,24 @@ document.getElementById('dlXlsx').onclick=()=>{
     ['Amount mismatch',r.counts.mism,Math.round(r.totals.mism),''],
     ['Bank only',r.counts.bankOnly,Math.round(r.totals.bankOnly),''],
     ['ERP only',r.counts.erpOnly,Math.round(r.totals.erpOnly),''],
-    [],['Match rate',rate+'%']
-  ];
+    [],['Match rate',rate+'%'],[],
+    ['CONTROL TOTALS','Bank (Rs.)','ERP (Rs.)','Difference (ERP - Bank)']
+  ].concat(tallyRows(r).map(t=>[t.lbl+' ('+t.bl+' vs '+t.el+')',Math.round(t.bank*100)/100,Math.round(t.erp*100)/100,Math.round((t.erp-t.bank)*100)/100]));
   const ws0=XLSX.utils.aoa_to_sheet(sum);
-  ws0['!cols']=[{wch:22},{wch:10},{wch:16},{wch:10}];
+  ws0['!cols']=[{wch:30},{wch:18},{wch:18},{wch:20}];
+  const todoAoa=[['ACTION REQUIRED — '+(r.issues.length?r.issues.length+' problem'+(r.issues.length>1?'s':'')+' found':'Everything matches')],[],
+    ['#','Problem','Fix in','Title','Title (Hinglish)','What happened','Kya hua (Hinglish)','What to do','Kya karna hai (Hinglish)','Date','Amount (Rs.)','Status']]
+    .concat(r.issues.map((it,i)=>[i+1,it.label,it.where==='erp'?'ERP':'Bank',it.title,it.titleHi||'',it.what,it.whatHi||'',it.todo,it.todoHi||'',fdate(it.date),Math.round(it.amt*100)/100,(S.done&&S.done.has(i))?'Fixed':'Open']));
+  const wsT=XLSX.utils.aoa_to_sheet(todoAoa);
+  wsT['!cols']=[{wch:4},{wch:15},{wch:7},{wch:36},{wch:34},{wch:60},{wch:60},{wch:55},{wch:55},{wch:13},{wch:14},{wch:8}];
+  XLSX.utils.book_append_sheet(wb,wsT,'Action required');
   XLSX.utils.book_append_sheet(wb,ws0,'Summary');
   [['matched','Matched'],['mism','Amount mismatch'],['bankOnly','Bank only'],['erpOnly','ERP only']]
     .forEach(([k,name])=>{
       const ws=XLSX.utils.aoa_to_sheet(aoaFrom(viewRowsFor(k)));
       XLSX.utils.book_append_sheet(wb,ws,name.slice(0,31));
     });
-  XLSX.writeFile(wb,`BrightPaper_Reconciliation_${new Date().toISOString().slice(0,10)}.xlsx`);
+  XLSX.writeFile(wb,`Reconciliation_${r.period?fdate(r.period.from).replace(/ /g,'-')+'_to_'+fdate(r.period.to).replace(/ /g,'-'):new Date().toISOString().slice(0,10)}.xlsx`);
 };
 document.getElementById('dlCsv').onclick=()=>{
   const csv=Papa.unparse(aoaFrom(currentRows()));
